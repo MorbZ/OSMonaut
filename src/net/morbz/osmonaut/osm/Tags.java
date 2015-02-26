@@ -24,12 +24,90 @@ package net.morbz.osmonaut.osm;
 * SOFTWARE.
 */
 
-import java.util.HashMap;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A class that holds the tags of an OSM entity.
  * @author MorbZ
  */
-public class Tags extends HashMap<String, String> {
-	private static final long serialVersionUID = 5908588729202305817L;
+public class Tags {
+	private List<String> keys, values;
+	
+	/**
+	 * Lazy creation of the arrays.
+	 */
+	private void createArrays() {
+		if(!hasArrays()) {
+			keys = new ArrayList<String>();
+			values = new ArrayList<String>();
+		}
+	}
+	
+	/**
+	 * @return True if the arrays have already been created
+	 */
+	private boolean hasArrays() {
+		return keys != null;
+	}
+	
+	/**
+	 * @param key The key of the tag
+	 * @return The index of the tag or -1 if the tag doesn't exist
+	 */
+	private int indexForKey(String key) {
+		// Has arrays?
+		if(!hasArrays()) {
+			return -1;
+		}
+		
+		// Iterate keys
+		for(int i = 0; i < keys.size(); i++) {
+			if(keys.get(i).equals(key)) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	
+	/**
+	 * @param key The key of the tag
+	 * @return True if there is a tag with this key
+	 */
+	public boolean hasKey(String key) {
+		return indexForKey(key) != -1;
+	}
+	
+	/**
+	 * @param key The key of the tag
+	 * @return The value for the tag with this key or null of the key doesn't exist
+	 */
+	public String get(String key) {
+		int index = indexForKey(key);
+		if(index != -1) {
+			return values.get(index);
+		}
+		return null;
+	}
+	
+	/**
+	 * Adds a tags with the given key and value or updates the tag if the key already exists.
+	 * @param key The key of the tag
+	 * @param value The value of the tag
+	 */
+	public void set(String key, String value) {
+		// Create the arrays
+		createArrays();
+		
+		// Check if key is present
+		int index = indexForKey(key);
+		if(index == -1) {
+			// Add new tag
+			keys.add(key);
+			values.add(value);
+		} else {
+			// Update tag
+			values.set(index, value);
+		}
+	}
 }

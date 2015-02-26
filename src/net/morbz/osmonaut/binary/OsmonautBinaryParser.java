@@ -47,7 +47,7 @@ public class OsmonautBinaryParser extends BinaryParser {
 			// Get tags
 			Tags tags = new Tags();
 			for(int j = 0; j < i.getKeysCount(); j++) {
-				tags.put(getStringById(i.getKeys(j)), getStringById(i.getVals(j)));
+				tags.set(getStringById(i.getKeys(j)), getStringById(i.getVals(j)));
 			}
 			
 			// Get properties
@@ -78,7 +78,7 @@ public class OsmonautBinaryParser extends BinaryParser {
 				while(nodes.getKeysVals(j) != 0) {
 					int keyid = nodes.getKeysVals(j++);
 					int valid = nodes.getKeysVals(j++);
-					tags.put(getStringById(keyid), getStringById(valid));
+					tags.set(getStringById(keyid), getStringById(valid));
 				}
 				j++; // Skip over the '0' delimiter.
 			}
@@ -110,7 +110,7 @@ public class OsmonautBinaryParser extends BinaryParser {
 			// Get tags
 			Tags tags = new Tags();
 			for(int j = 0; j < i.getKeysCount(); j++) {
-				tags.put(getStringById(i.getKeys(j)), getStringById(i.getVals(j)));
+				tags.set(getStringById(i.getKeys(j)), getStringById(i.getVals(j)));
 			}
 
 			// Get nodes
@@ -141,7 +141,7 @@ public class OsmonautBinaryParser extends BinaryParser {
 			// Get tags
 			Tags tags = new Tags();
 			for(int j = 0; j < i.getKeysCount(); j++) {
-				tags.put(getStringById(i.getKeys(j)), getStringById(i.getVals(j)));
+				tags.set(getStringById(i.getKeys(j)), getStringById(i.getVals(j)));
 			}
 
 			// Get members
