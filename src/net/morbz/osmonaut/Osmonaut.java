@@ -27,17 +27,21 @@ package net.morbz.osmonaut;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.morbz.osmonaut.binary.OsmonautReader;
+import net.morbz.osmonaut.binary.OsmonautBinaryParser;
 import net.morbz.osmonaut.binary.OsmonautSink;
-import net.morbz.osmonaut.osm.EntityType;
 import net.morbz.osmonaut.osm.Entity;
+import net.morbz.osmonaut.osm.EntityType;
 import net.morbz.osmonaut.osm.Node;
 import net.morbz.osmonaut.osm.Relation;
 import net.morbz.osmonaut.osm.RelationMember;
 import net.morbz.osmonaut.osm.Way;
+
+import org.openstreetmap.osmosis.osmbinary.file.BlockInputStream;
 
 /**
  * The base OSMonaut class that handles scanning of an OSM .pbf file.
@@ -289,23 +293,15 @@ public class Osmonaut {
 	 * @param sink The sink to use
 	 */
 	private void scanFile(final OsmonautSink sink) {
-		// Start reader
-		Thread readerThread = null;
-		OsmonautReader reader;
 		try {
-			reader = new OsmonautReader(new FileInputStream(file), sink);
-			readerThread = new Thread(reader);
-			readerThread.start();
-			
-			while(readerThread.isAlive()) {
-			    try {
-			        readerThread.join();
-			    } catch (InterruptedException e) {
-			        /* do nothing */
-			    }
-			}
-		} catch(FileNotFoundException e) {
+			// Process file
+			InputStream input = new FileInputStream(file);
+			OsmonautBinaryParser parser = new OsmonautBinaryParser(sink);
+			new BlockInputStream(input, parser).process();
+		} catch (FileNotFoundException e) {
 			System.out.println("E: Input file does not exist");
+		} catch (IOException e) {
+			System.out.println("E: Error while reading input file");
 		}
 	}
 }
