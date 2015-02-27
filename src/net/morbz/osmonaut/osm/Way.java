@@ -26,6 +26,8 @@ package net.morbz.osmonaut.osm;
 
 import java.util.List;
 
+import net.morbz.osmonaut.util.StringUtil;
+
 /**
  * A class that represents an OSM way element.
  * @author MorbZ
@@ -56,5 +58,23 @@ public class Way extends Entity {
 	@Override
 	public EntityType getEntityType() {
 		return EntityType.WAY;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		String str = "";
+		str += "{" + "\t" + "WAY" + "\n";
+		str += "\t" + "id: " + id + "\n";
+		str += "\t" + "tags: " + StringUtil.indent(tags.toString());
+		str += "\t" + "nodes: [" + "\n";
+		for(Node node : nodes) {
+			str += StringUtil.indent(StringUtil.indent(node.toString()));
+		}
+		str += "\t" + "]" + "\n";
+		str += "}";
+		return str;		
 	}
 }

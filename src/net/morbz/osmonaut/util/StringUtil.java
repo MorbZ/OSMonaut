@@ -1,4 +1,4 @@
-package net.morbz.osmonaut.osm;
+package net.morbz.osmonaut.util;
 
 /*
 * The MIT License (MIT)
@@ -24,51 +24,22 @@ package net.morbz.osmonaut.osm;
 * SOFTWARE.
 */
 
-import net.morbz.osmonaut.util.StringUtil;
-
 /**
- * A class that represents an OSM node element.
+ * Some custom string functions.
  * @author MorbZ
  */
-public class Node extends Entity {
-	private LatLon latlon;
-	
+public class StringUtil {
 	/**
-	 * @param id The OSM-ID of this node
-	 * @param tags The tags of this node
-	 * @param latlon The coordinates of this node
+	 * Indents every line of the String by 1 tab.
+	 * @param str The string to indent
+	 * @return The indented string
 	 */
-	public Node(long id, Tags tags, LatLon latlon) {
-		super(id, tags);
-		this.latlon = latlon;
-	}
-	
-	/**
-	 * @return The coordinates of this node
-	 */
-	public LatLon getLatlon() {
-		return latlon;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public EntityType getEntityType() {
-		return EntityType.NODE;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String toString() {
-		String str = "";
-		str += "{" + "\t" + "NODE" + "\n";
-		str += "\t" + "id: " + id + "\n";
-		str += "\t" + "latlon: " + latlon + "\n";
-		str += "\t" + "tags: " + StringUtil.indent(tags.toString());
-		str += "}";
-		return str;
+	public static String indent(String str) {
+		String[] lines = str.split("\\n");
+		String newStr = "";
+		for(String line : lines) {
+			newStr += "\t" + line + "\n";
+		}
+		return newStr;
 	}
 }

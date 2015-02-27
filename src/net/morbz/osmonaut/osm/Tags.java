@@ -110,4 +110,32 @@ public class Tags {
 			values.set(index, value);
 		}
 	}
+	
+	/**
+	 * @return The number of tags
+	 */
+	public int size() {
+		if(!hasArrays()) {
+			return 0;
+		}
+		return keys.size();
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		if(size() == 0) {
+			return "[]";
+		}
+		
+		String str = "";
+		str += "[" + "\n";
+		for(int i = 0; i < size(); i++) {
+			str += "\t" + "{ key: \"" + keys.get(i) + "\", value: \"" + values.get(i) + "\" }" + "\n";
+		}
+		str += "]";
+		return str;
+	}
 }

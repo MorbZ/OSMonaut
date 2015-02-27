@@ -29,8 +29,8 @@ package net.morbz.osmonaut.osm;
  * @author MorbZ
  */
 public abstract class Entity {
-	private long id;
-	private Tags tags;
+	protected long id;
+	protected Tags tags;
 	
 	/**
 	 * @param id The OSM-ID of this entity

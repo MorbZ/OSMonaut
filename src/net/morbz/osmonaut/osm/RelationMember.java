@@ -24,6 +24,8 @@ package net.morbz.osmonaut.osm;
 * SOFTWARE.
 */
 
+import net.morbz.osmonaut.util.StringUtil;
+
 /**
  * A class that represents a member of an OSM relation.
  * @author MorbZ
@@ -53,5 +55,18 @@ public class RelationMember {
 	 */
 	public String getRole() {
 		return role;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		String str = "";
+		str += "{" + "\n";
+		str += "\t" + "role: \"" + role + "\"" + "\n";
+		str += StringUtil.indent(entity.toString()) + "\n";
+		str += "}";
+		return str;
 	}
 }

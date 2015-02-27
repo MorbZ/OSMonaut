@@ -54,4 +54,12 @@ public class LatLon {
 	public double getLon() {
 		return lon;
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		return "{ lat: " + String.format("%.7f", lat) + ", lon: " + String.format("%.7f", lon) + " }";
+	}
 }
