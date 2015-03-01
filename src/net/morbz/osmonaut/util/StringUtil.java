@@ -24,6 +24,8 @@ package net.morbz.osmonaut.util;
 * SOFTWARE.
 */
 
+import java.util.Locale;
+
 /**
  * Some custom string functions.
  * @author MorbZ
@@ -41,5 +43,15 @@ public class StringUtil {
 			newStr += "\t" + line + "\n";
 		}
 		return newStr;
+	}
+	
+	/**
+	 * Formats a coordinate for pretty output.
+	 * @param coord The coordinate to format
+	 * @return The formatted coordinate
+	 */
+	public static String formatCoordinate(double coord) {
+		// 7 decimals is the OSM default
+		return String.format(Locale.ENGLISH, "%.7f", coord);
 	}
 }

@@ -27,7 +27,6 @@ package net.morbz.osmonaut.osm;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.morbz.osmonaut.util.Geometry;
 import net.morbz.osmonaut.util.StringUtil;
 
 /**
@@ -116,7 +115,20 @@ public class Way extends Entity {
 	    }
 	    
 	    // Otherwise we have to use a bounding box (e.g. when all node are in one line)
-	    return Geometry.getBoundingCenter(coords);
+	    Bounds bounds = getBounds();
+	    return bounds.getCenter();
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Bounds getBounds() {
+		Bounds bounds = new Bounds();
+		for(Node node : nodes) {
+			bounds.extend(node.getLatlon());
+		}
+		return bounds;
 	}
 
 	/**

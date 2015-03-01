@@ -24,6 +24,8 @@ package net.morbz.osmonaut.osm;
 * SOFTWARE.
 */
 
+import net.morbz.osmonaut.util.StringUtil;
+
 /**
  * A class that represents the latitude and longitude.
  * @author MorbZ
@@ -78,6 +80,7 @@ public class LatLon {
 	 */
 	@Override
 	public String toString() {
-		return "{ lat: " + String.format("%.7f", lat) + ", lon: " + String.format("%.7f", lon) + " }";
+		return "{ lat: " + StringUtil.formatCoordinate(lat) + 
+				", lon: " + StringUtil.formatCoordinate(lon) + " }";
 	}
 }

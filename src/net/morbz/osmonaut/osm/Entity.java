@@ -67,4 +67,10 @@ public abstract class Entity {
 	 * @return The center of this entity or null if there is no data
 	 */
 	public abstract LatLon getCenter();
+	
+	/**
+	 * Returns a bounding box that contains all elements and sub-entities of this entity.
+	 * @return The surrounding bounding box
+	 */
+	public abstract Bounds getBounds();
 }

@@ -70,6 +70,16 @@ public class Node extends Entity {
 	 * {@inheritDoc}
 	 */
 	@Override
+	public Bounds getBounds() {
+		Bounds bounds = new Bounds();
+		bounds.extend(latlon);
+		return bounds;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public String toString() {
 		String str = "";
 		str += "{" + "\t" + "NODE" + "\n";
