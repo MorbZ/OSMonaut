@@ -62,6 +62,14 @@ public class Node extends Entity {
 	 * {@inheritDoc}
 	 */
 	@Override
+	public LatLon getCenter() {
+		return latlon;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public String toString() {
 		String str = "";
 		str += "{" + "\t" + "NODE" + "\n";

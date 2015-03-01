@@ -24,8 +24,10 @@ package net.morbz.osmonaut.osm;
 * SOFTWARE.
 */
 
+import java.util.ArrayList;
 import java.util.List;
 
+import net.morbz.osmonaut.util.Geometry;
 import net.morbz.osmonaut.util.StringUtil;
 
 /**
@@ -60,6 +62,63 @@ public class Way extends Entity {
 		return EntityType.WAY;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public LatLon getCenter() {
+		// Check number of nodes
+		switch(nodes.size()) {
+		case 0:
+			return null;
+		case 1:
+			return nodes.get(0).getLatlon();
+		}
+		
+		// Make point array
+		List<LatLon> coords = new ArrayList<LatLon>();
+		for(Node node : nodes) {
+			coords.add(node.getLatlon());
+		}
+		
+		// Close polygon
+		if(!coords.get(0).equals(coords.get(coords.size()-1))) {
+			coords.add(coords.get(0));
+		}
+		
+		// Calculate centroid 
+		double centerX = 0, centerY = 0;
+		double signedArea = 0.0;
+	    double x0 = 0.0; // Current vertex X
+	    double y0 = 0.0; // Current vertex Y
+	    double x1 = 0.0; // Next vertex X
+	    double y1 = 0.0; // Next vertex Y
+	    double a = 0.0;  // Partial signed area
+	    
+	    // For all vertices
+	    for(int i = 0; i < coords.size() - 1; i++) {
+	        x0 = coords.get(i).getLon();
+	        y0 = coords.get(i).getLat();
+	        x1 = coords.get(i + 1).getLon();
+	        y1 = coords.get(i + 1).getLat();
+	        a = x0 * y1 - x1 * y0;
+	        signedArea += a;
+	        centerX += (x0 + x1) * a;
+	        centerY += (y0 + y1) * a;
+	    }
+	    
+	    // If there is an area we have found the centroid
+	    if(signedArea != 0) {
+	    	signedArea *= 0.5;
+	    	centerX /= (6.0 * signedArea);
+	    	centerY /= (6.0 * signedArea);
+	    	return new LatLon(centerY, centerX);
+	    }
+	    
+	    // Otherwise we have to use a bounding box (e.g. when all node are in one line)
+	    return Geometry.getBoundingCenter(coords);
+	}
+
 	/**
 	 * {@inheritDoc}
 	 */

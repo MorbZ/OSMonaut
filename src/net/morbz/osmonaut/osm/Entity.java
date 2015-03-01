@@ -59,4 +59,12 @@ public abstract class Entity {
 	 * @return The type of this entity
 	 */
 	public abstract EntityType getEntityType();
+	
+	/**
+	 * Returns the center of this entity. For nodes it's the exact position. For ways their 
+	 * geometric center is used. For relations the center of a bounding box defined by the centers
+	 * of all member entities is used.
+	 * @return The center of this entity or null if there is no data
+	 */
+	public abstract LatLon getCenter();
 }

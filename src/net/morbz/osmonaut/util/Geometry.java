@@ -1,4 +1,4 @@
-package net.morbz.osmonaut.osm;
+package net.morbz.osmonaut.util;
 
 /*
 * The MIT License (MIT)
@@ -24,60 +24,36 @@ package net.morbz.osmonaut.osm;
 * SOFTWARE.
 */
 
+import java.util.List;
+
+import net.morbz.osmonaut.osm.LatLon;
+
 /**
- * A class that represents the latitude and longitude.
+ * A class for geometric functions.
  * @author MorbZ
  */
-public class LatLon {
-	private double lat;
-	private double lon;
-
+public class Geometry {
 	/**
-	 * @param lat The latitude
-	 * @param lon The longitude
+	 * Takes a list of coords and returns the center of the bounding box that is defined by all the
+	 * coords.
+	 * @param coords The coords that define the bounding box
+	 * @return The center of the bounding box or null if there are no coords
 	 */
-	public LatLon(double lat, double lon) {
-		this.lat = lat;
-		this.lon = lon;
-	}
-	
-	/**
-	 * @return The latitude
-	 */
-	public double getLat() {
-		return lat;
-	}
-
-	/**
-	 * @return The longitude
-	 */
-	public double getLon() {
-		return lon;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public boolean equals(Object obj) {
-		if(!(obj instanceof LatLon)) {
-			return false;
+	public static LatLon getBoundingCenter(List<LatLon> coords) {
+		// Check number of coords
+		if(coords.size() == 0) {
+			return null;
 		}
-		LatLon latlon = (LatLon)obj;
-		if(latlon.getLat() != lat) {
-			return false;
-		}
-		if(latlon.getLon() != lon) {
-			return false;
-		}
-		return true;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public String toString() {
-		return "{ lat: " + String.format("%.7f", lat) + ", lon: " + String.format("%.7f", lon) + " }";
+		
+		// Make bounding box
+		double minLat = Double.MAX_VALUE, minLon = Double.MAX_VALUE;
+	    double maxLat = Double.MIN_VALUE, maxLon = Double.MIN_VALUE;
+	    for(LatLon latlon : coords) {
+	    	minLat = Math.min(minLat, latlon.getLat());
+	    	minLon = Math.min(minLon, latlon.getLon());
+	    	maxLat = Math.max(maxLat, latlon.getLat());
+	    	maxLon = Math.max(maxLon, latlon.getLon());
+	    }
+	    return new LatLon((minLat + maxLat) / 2, (minLon + maxLon) / 2);
 	}
 }

@@ -24,8 +24,10 @@ package net.morbz.osmonaut.osm;
 * SOFTWARE.
 */
 
+import java.util.ArrayList;
 import java.util.List;
 
+import net.morbz.osmonaut.util.Geometry;
 import net.morbz.osmonaut.util.StringUtil;
 
 /**
@@ -58,6 +60,22 @@ public class Relation extends Entity {
 	@Override
 	public EntityType getEntityType() {
 		return EntityType.RELATION;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public LatLon getCenter() {
+		// Make list of center coords
+		List<LatLon> coords = new ArrayList<LatLon>();
+		for(RelationMember member : members) {
+			LatLon center = member.getEntity().getCenter();
+			if(center != null) {
+				coords.add(center);
+			}
+		}
+		return Geometry.getBoundingCenter(coords);
 	}
 	
 	/**

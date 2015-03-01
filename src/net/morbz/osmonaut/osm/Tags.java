@@ -80,6 +80,19 @@ public class Tags {
 	
 	/**
 	 * @param key The key of the tag
+	 * @param value The value of the tag
+	 * @return True if there is a tag with this key and value
+	 */
+	public boolean hasKeyValue(String key, String value) {
+		int index = indexForKey(key);
+		if(index == -1) {
+			return false;
+		}
+		return values.get(index).equals(value);
+	}
+	
+	/**
+	 * @param key The key of the tag
 	 * @return The value for the tag with this key or null of the key doesn't exist
 	 */
 	public String get(String key) {
