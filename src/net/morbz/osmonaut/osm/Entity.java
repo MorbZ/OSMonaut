@@ -56,6 +56,24 @@ public abstract class Entity {
 	}
 	
 	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof Entity)) {
+			return false;
+		}
+		Entity entity = (Entity)obj;
+		if(entity.getEntityType() != getEntityType()) {
+			return false;
+		}
+		if(entity.getId() != id) {
+			return false;
+		}
+		return true;
+	}
+	
+	/**
 	 * @return The type of this entity
 	 */
 	public abstract EntityType getEntityType();
