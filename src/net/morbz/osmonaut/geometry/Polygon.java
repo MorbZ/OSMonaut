@@ -27,7 +27,6 @@ package net.morbz.osmonaut.geometry;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.morbz.osmonaut.osm.Bounds;
 import net.morbz.osmonaut.osm.LatLon;
 import net.morbz.osmonaut.osm.Node;
 import net.morbz.osmonaut.osm.Way;
@@ -36,7 +35,7 @@ import net.morbz.osmonaut.osm.Way;
  * This class defines a Polygon of Latitude/Longitude coordinates. A polygon is always closed.
  * @author MorbZ
  */
-public class Polygon implements IPolygon {
+public class Polygon extends IPolygon {
 	private List<LatLon> coords = new ArrayList<LatLon>();
 	private Bounds bounds = new Bounds();
 	
@@ -89,13 +88,6 @@ public class Polygon implements IPolygon {
 		this.coords.add(latlon);
 		this.bounds.extend(latlon);
 	}
-
-	/**
-	 * @return The coordinates of this polygon
-	 */
-	public List<LatLon> getCoords() {
-		return coords;
-	}
 	
 	/**
 	 * Returns the geometric centroid of this polygon.
@@ -139,7 +131,42 @@ public class Polygon implements IPolygon {
 	 * {@inheritDoc}
 	 */
 	@Override
+	public List<LatLon> getCoords() {
+		return coords;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Bounds getBounds() {
 		return bounds;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean contains(LatLon latlon) {
+		// Check bounds
+		if(!bounds.contains(latlon)) {
+			return false;
+		}
+		
+		// Iterate vertices
+		boolean isIn = false;
+		double lat = latlon.getLat();
+		double lon = latlon.getLon();
+		for(int i = 0, j = coords.size() - 1; i < coords.size(); j = i++) {
+			double iLon = coords.get(i).getLon();
+			double iLat = coords.get(i).getLat();
+			double jLon = coords.get(j).getLon();
+			double jLat = coords.get(j).getLat();
+			if(((iLon > lon) != (jLon > lon)) && 
+				(lat < (jLat - iLat) * (lon - iLon) / (jLon - iLon) + iLat)) {
+				isIn = !isIn;
+			}
+		}
+		return isIn;
 	}
 }

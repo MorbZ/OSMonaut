@@ -1,4 +1,4 @@
-package net.morbz.osmonaut.osm;
+package net.morbz.osmonaut.geometry;
 
 /*
 * The MIT License (MIT)
@@ -24,6 +24,7 @@ package net.morbz.osmonaut.osm;
 * SOFTWARE.
 */
 
+import net.morbz.osmonaut.osm.LatLon;
 import net.morbz.osmonaut.util.StringUtil;
 
 /**
@@ -67,6 +68,29 @@ public class Bounds {
 			return null;
 		}
 		return new LatLon((minLat + maxLat) / 2, (minLon + maxLon) / 2);
+	}
+	
+	/**
+	 * @param latlon The coordinate
+	 * @return True if the given coordinate is within the bounds
+	 */
+	public boolean contains(LatLon latlon) {
+		if(!initialized) {
+			return false;
+		}
+		if(latlon.getLat() < minLat) {
+			return false;
+		}
+		if(latlon.getLat() > maxLat) {
+			return false;
+		}
+		if(latlon.getLon() < minLon) {
+			return false;
+		}
+		if(latlon.getLon() > maxLon) {
+			return false;
+		}
+		return true;
 	}
 	
 	/**

@@ -26,6 +26,7 @@ package net.morbz.osmonaut.osm;
 
 import java.util.List;
 
+import net.morbz.osmonaut.geometry.Bounds;
 import net.morbz.osmonaut.geometry.Polygon;
 import net.morbz.osmonaut.util.StringUtil;
 

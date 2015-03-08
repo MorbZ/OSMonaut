@@ -24,16 +24,29 @@ package net.morbz.osmonaut.geometry;
 * SOFTWARE.
 */
 
-import net.morbz.osmonaut.osm.Bounds;
+import java.util.List;
+
+import net.morbz.osmonaut.osm.LatLon;
 
 /**
  * The interface for all types of polygons.
  * @author MorbZ
  */
-public interface IPolygon {
+public abstract class IPolygon {
+	/**
+	 * @return All coordinates that are part of this polygon
+	 */
+	public abstract List<LatLon> getCoords();
+	
 	/**
 	 * Returns a bounding box that contains all points of this polygon.
 	 * @return The surrounding bounding box
 	 */
-	public Bounds getBounds();
+	public abstract Bounds getBounds();
+	
+	/**
+	 * @param latlon The coordinate
+	 * @return True if the given coordinate is within this polygon
+	 */
+	public abstract boolean contains(LatLon latlon);
 }

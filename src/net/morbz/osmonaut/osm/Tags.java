@@ -79,6 +79,20 @@ public class Tags {
 	}
 	
 	/**
+	 * 
+	 * @param keys The keys to check
+	 * @return True if there is at least 1 of the given keys
+	 */
+	public boolean hasOneOfKeys(String[] keys) {
+		for(String key : keys) {
+			if(indexForKey(key) != -1) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
 	 * @param key The key of the tag
 	 * @param value The value of the tag
 	 * @return True if there is a tag with this key and value

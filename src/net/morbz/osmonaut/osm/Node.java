@@ -24,6 +24,7 @@ package net.morbz.osmonaut.osm;
 * SOFTWARE.
 */
 
+import net.morbz.osmonaut.geometry.Bounds;
 import net.morbz.osmonaut.util.StringUtil;
 
 /**

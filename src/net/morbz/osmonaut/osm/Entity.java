@@ -24,6 +24,8 @@ package net.morbz.osmonaut.osm;
 * SOFTWARE.
 */
 
+import net.morbz.osmonaut.geometry.Bounds;
+
 /**
  * The base class for all OSM entities.
  * @author MorbZ

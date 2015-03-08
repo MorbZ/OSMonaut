@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import net.morbz.osmonaut.osm.Bounds;
+import net.morbz.osmonaut.geometry.MultiPolygonMember.Type;
 import net.morbz.osmonaut.osm.EntityType;
 import net.morbz.osmonaut.osm.LatLon;
 import net.morbz.osmonaut.osm.Node;
@@ -41,7 +41,7 @@ import net.morbz.osmonaut.osm.Way;
  * or outer parts.
  * @author MorbZ
  */
-public class MultiPolygon implements IPolygon {
+public class MultiPolygon extends IPolygon {
 	private ArrayList<MultiPolygonMember> members = new ArrayList<MultiPolygonMember>();
 	private Bounds bounds = new Bounds();
 	
@@ -216,7 +216,44 @@ public class MultiPolygon implements IPolygon {
 	 * {@inheritDoc}
 	 */
 	@Override
+	public List<LatLon> getCoords() {
+		List<LatLon> coords = new ArrayList<LatLon>();
+		for(MultiPolygonMember member : members) {
+			coords.addAll(member.getPolygon().getCoords());
+		}
+		return coords;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public Bounds getBounds() {
 		return bounds;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public boolean contains(LatLon latlon) {
+		// Check bounds
+		if(!bounds.contains(latlon)) {
+			return false;
+		}
+		
+		// Check members, the outer count has to be higher than the inner, for nested outer 
+		// polygons.
+		int innerCount = 0, outerCount = 0;
+		for(MultiPolygonMember member : members) {
+			if(member.getPolygon().contains(latlon)) {
+				if(member.getType() == Type.INNER) {
+					innerCount++;
+				} else {
+					outerCount++;
+				}
+			}
+		}
+		return outerCount > innerCount;
 	}
 }
