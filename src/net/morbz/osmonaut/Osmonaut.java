@@ -55,6 +55,11 @@ public class Osmonaut {
 	private EntityCache nodeCache = new EntityCache();
 	private EntityCache wayCache = new EntityCache();
 	
+	// Dummy method for exporting as runnable JAR
+	public static void main(String[] args) {
+		
+	}
+	
 	/**
 	 * @param filename The name of the .pbf file to scan
 	 * @param filter The entity filter that tells which entities should be scanned
