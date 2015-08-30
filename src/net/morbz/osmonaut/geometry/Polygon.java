@@ -95,7 +95,8 @@ public class Polygon extends IPolygon {
 	 */
 	public LatLon getCenter() {
 		// Calculate centroid 
-		double centerX = 0, centerY = 0;
+		// This part is buggy
+		/*double centerX = 0, centerY = 0;
 		double signedArea = 0.0;
 	    double x0 = 0.0; // Current vertex X
 	    double y0 = 0.0; // Current vertex Y
@@ -121,7 +122,7 @@ public class Polygon extends IPolygon {
 	    	centerX /= (6.0 * signedArea);
 	    	centerY /= (6.0 * signedArea);
 	    	return new LatLon(centerY, centerX);
-	    }
+	    }*/
 	    
 	    // Otherwise we have to use the bounding box (e.g. when all coords are in one line)
 	    return bounds.getCenter();
