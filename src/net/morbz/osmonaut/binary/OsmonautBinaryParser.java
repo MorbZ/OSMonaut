@@ -171,7 +171,7 @@ public class OsmonautBinaryParser extends BinaryParser {
 			
 			// Create entity
 			long id = i.getId();
-			Relation relation = new Relation(id, tags, members);
+			Relation relation = new Relation(id, tags, members, false);
 			sink.foundRelation(relation);
 		}
 	}

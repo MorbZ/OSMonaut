@@ -35,15 +35,25 @@ import net.morbz.osmonaut.util.StringUtil;
  */
 public class Relation extends Entity {
 	private List<RelationMember> members;
+	private boolean isIncomplete;
 	
+	/**
+	 * @return Whether this relation is incomplete. Incomplete means that not all relation members 
+	 * are present in the data set
+	 */
+	public boolean isIncomplete() {
+		return isIncomplete;
+	}
+
 	/**
 	 * @param id The OSM-ID of this relation
 	 * @param tags The tags of this relation
 	 * @param members The members of this relation
 	 */
-	public Relation(long id, Tags tags, List<RelationMember> members) {
+	public Relation(long id, Tags tags, List<RelationMember> members, boolean isIncomplete) {
 		super(id, tags);
 		this.members = members;
+		this.isIncomplete = isIncomplete;
 	}
 	
 	/**

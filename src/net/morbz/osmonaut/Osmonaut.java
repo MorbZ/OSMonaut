@@ -228,6 +228,7 @@ public class Osmonaut {
 				}
 				
 				// Assemble members
+				boolean incomplete = false;
 				List<RelationMember> members = new ArrayList<RelationMember>();
 				for(RelationMember member : relation.getMembers()) {
 					// Get real entity
@@ -247,13 +248,15 @@ public class Osmonaut {
 					// Add entity
 					if(entity == null) {
 						//System.out.println("E: Missing relation member");
+						incomplete = true;
 					} else {
 						members.add(new RelationMember(entity, member.getRole()));
 					}
 				}
 				
 				// Assemble relation
-				Relation newRelation = new Relation(relation.getId(), relation.getTags(), members);
+				Relation newRelation = new Relation(relation.getId(), relation.getTags(), members, 
+					incomplete);
 				receiver.foundEntity(newRelation);
 			}
 			
