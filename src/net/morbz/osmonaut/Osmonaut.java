@@ -51,7 +51,8 @@ public class Osmonaut {
 	private File file;
 	private IOsmonautReceiver receiver;
 	private EntityFilter filter;
-	
+	private boolean wayNodeTags = true;
+
 	private EntityCache nodeCache = new EntityCache();
 	private EntityCache wayCache = new EntityCache();
 	
@@ -67,6 +68,17 @@ public class Osmonaut {
 	public Osmonaut(String filename, EntityFilter filter) {
 		this.file = new File(filename);
 		this.filter = filter;
+	}
+	
+	/**
+	 * @param filename The name of the .pbf file to scan
+	 * @param filter The entity filter that tells which entities should be scanned
+	 * @param wayNodeTags Whether way-nodes should have tags. Disabling lowers memory usage.
+	 */
+	public Osmonaut(String filename, EntityFilter filter, boolean wayNodeTags) {
+		this.file = new File(filename);
+		this.filter = filter;
+		this.wayNodeTags = wayNodeTags;
 	}
 	
 	/**
@@ -189,6 +201,10 @@ public class Osmonaut {
 				
 				// Is needed for ways/relations?
 				if(nodeCache.isNeeded(node.getId())) {
+					if(!wayNodeTags) {
+						// Remove tags
+						node = new Node(node.getId(), null, node.getLatlon());
+					}
 					nodeCache.addEntity(node);
 				}
 			}
