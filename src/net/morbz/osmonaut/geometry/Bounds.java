@@ -32,8 +32,8 @@ import net.morbz.osmonaut.util.StringUtil;
  * @author MorbZ
  */
 public class Bounds {
-	private double minLat = Double.MAX_VALUE, maxLat = Double.MIN_VALUE;
-	private double minLon = Double.MAX_VALUE, maxLon = Double.MIN_VALUE;
+	private double minLat = Double.MAX_VALUE, maxLat = -Double.MAX_VALUE;
+	private double minLon = Double.MAX_VALUE, maxLon = -Double.MAX_VALUE;
 	private boolean initialized = false;
 	
 	/**
