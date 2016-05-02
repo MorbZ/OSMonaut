@@ -1,0 +1,29 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+sourceCompatibility = 1.7
+version = '1.0.2-SNAPSHOT'
+
+jar {
+    manifest {
+        attributes 'Implementation-Title': 'OSMonaut', 'Implementation-Version': version
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+sourceSets {
+    main {
+        java {
+            srcDir 'src'
+        }
+    }
+}
+
+dependencies {
+    // testCompile group: 'junit', name: 'junit', version: '4.+'
+    compile group: 'org.openstreetmap.osmosis', name: 'osmosis-osm-binary', version: '0.43.1'
+    compile group: 'com.google.protobuf', name: 'protobuf-java', version: '2.6.1'
+}
