@@ -25,13 +25,14 @@ package net.morbz.osmonaut.osm;
 */
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
- * A class that holds the tags of an OSM entity.
+ * A class that holds the tags of an OSM entity. Iteration on this class is based on the keys.
  * @author MorbZ
  */
-public class Tags {
+public class Tags implements Iterable<String> {
 	private List<String> keys, values;
 	
 	/**
@@ -146,6 +147,18 @@ public class Tags {
 			return 0;
 		}
 		return keys.size();
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+    public Iterator<String> iterator() {
+		if(!hasArrays()) {
+			return new ArrayList<String>().iterator();
+		} else {
+			return keys.iterator();
+		}
 	}
 	
 	/**
