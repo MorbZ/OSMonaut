@@ -1,7 +1,6 @@
 /bin/
 /.classpath
 /.project
-*.osm.pbf
 /.settings/
 .gradle/
 build/
