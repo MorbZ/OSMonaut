@@ -1,6 +1,0 @@
-[submodule "osmosis"]
-	path = osmosis
-	url = https://github.com/openstreetmap/osmosis
-[submodule "protobuf"]
-	path = protobuf
-	url = https://github.com/google/protobuf
