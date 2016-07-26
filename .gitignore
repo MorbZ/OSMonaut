@@ -3,3 +3,5 @@
 /.project
 *.osm.pbf
 /.settings/
+.gradle/
+build/
