@@ -29,6 +29,7 @@ import net.morbz.osmonaut.util.StringUtil;
 
 /**
  * This class defines a bounding box of latitude and longitude coordinates.
+ * 
  * @author MorbZ
  */
 public class Bounds {
@@ -37,118 +38,134 @@ public class Bounds {
 	private boolean initialized = false;
 
 	/**
-	* Creates an empty, uninitialized bounding box.
-	*/
+	 * Creates an empty, uninitialized bounding box.
+	 */
 	public Bounds() {
 	}
 
 	/**
-	* Creates a bounding box with the given bounds. The order of the coordinates doesn't matter.
-	* @param lat1 The first latitude
-	* @param lat2 The second latitude
-	* @param lon1 The first longitude
-	* @param lon2 The second longitude
-	*/
+	 * Creates a bounding box with the given bounds. The order of the
+	 * coordinates doesn't matter.
+	 * 
+	 * @param lat1
+	 *            The first latitude
+	 * @param lat2
+	 *            The second latitude
+	 * @param lon1
+	 *            The first longitude
+	 * @param lon2
+	 *            The second longitude
+	 */
 	public Bounds(double lat1, double lat2, double lon1, double lon2) {
-	   initialized = true;
-	   minLat = Math.min(lat1, lat2);
-	   maxLat = Math.max(lat1, lat2);
-	   minLon = Math.min(lon1, lon2);
-	   maxLon = Math.max(lon1, lon2);
+		initialized = true;
+		minLat = Math.min(lat1, lat2);
+		maxLat = Math.max(lat1, lat2);
+		minLon = Math.min(lon1, lon2);
+		maxLon = Math.max(lon1, lon2);
 	}
 
 	/**
 	 * Extends the bounding box to include the given coordinate.
-	 * @param latlon The coordinate
+	 * 
+	 * @param latlon
+	 *            The coordinate
 	 */
 	public void extend(LatLon latlon) {
 		initialized = true;
 		minLat = Math.min(minLat, latlon.getLat());
-    	minLon = Math.min(minLon, latlon.getLon());
-    	maxLat = Math.max(maxLat, latlon.getLat());
-    	maxLon = Math.max(maxLon, latlon.getLon());
+		minLon = Math.min(minLon, latlon.getLon());
+		maxLat = Math.max(maxLat, latlon.getLat());
+		maxLon = Math.max(maxLon, latlon.getLon());
 	}
 
 	/**
 	 * Extends the bounding box to include the given bounding box.
-	 * @param bounds The bounding box
+	 * 
+	 * @param bounds
+	 *            The bounding box
 	 */
 	public void extend(Bounds bounds) {
 		initialized = true;
 		minLat = Math.min(minLat, bounds.getMinLat());
-    	minLon = Math.min(minLon, bounds.getMinLon());
-    	maxLat = Math.max(maxLat, bounds.getMaxLat());
-    	maxLon = Math.max(maxLon, bounds.getMaxLon());
+		minLon = Math.min(minLon, bounds.getMinLon());
+		maxLat = Math.max(maxLat, bounds.getMaxLat());
+		maxLon = Math.max(maxLon, bounds.getMaxLon());
 	}
 
 	/**
-	 * @return The center of this bounding box or null if the bounding box has not been initialized
+	 * @return The center of this bounding box or null if the bounding box has
+	 *         not been initialized
 	 */
 	public LatLon getCenter() {
-		if(!initialized) {
+		if (!initialized) {
 			return null;
 		}
 		return new LatLon((minLat + maxLat) / 2, (minLon + maxLon) / 2);
 	}
 
 	/**
-	 * @param latlon The coordinate
+	 * @param latlon
+	 *            The coordinate
 	 * @return True if the given coordinate is within the bounds
 	 */
 	public boolean contains(LatLon latlon) {
-		if(!initialized) {
+		if (!initialized) {
 			return false;
 		}
-		if(latlon.getLat() < minLat) {
+		if (latlon.getLat() < minLat) {
 			return false;
 		}
-		if(latlon.getLat() > maxLat) {
+		if (latlon.getLat() > maxLat) {
 			return false;
 		}
-		if(latlon.getLon() < minLon) {
+		if (latlon.getLon() < minLon) {
 			return false;
 		}
-		if(latlon.getLon() > maxLon) {
+		if (latlon.getLon() > maxLon) {
 			return false;
 		}
 		return true;
 	}
 
 	/**
-	 * @return The minimal latitude or 0 if the bounding box has not been initialized
+	 * @return The minimal latitude or 0 if the bounding box has not been
+	 *         initialized
 	 */
 	public double getMinLat() {
-		if(!initialized) {
+		if (!initialized) {
 			return 0;
 		}
 		return minLat;
 	}
 
 	/**
-	 * @return The maximal latitude or 0 if the bounding box has not been initialized
+	 * @return The maximal latitude or 0 if the bounding box has not been
+	 *         initialized
 	 */
 	public double getMaxLat() {
-		if(!initialized) {
+		if (!initialized) {
 			return 0;
 		}
 		return maxLat;
 	}
 
 	/**
-	 * @return The minimal longitude or 0 if the bounding box has not been initialized
+	 * @return The minimal longitude or 0 if the bounding box has not been
+	 *         initialized
 	 */
 	public double getMinLon() {
-		if(!initialized) {
+		if (!initialized) {
 			return 0;
 		}
 		return minLon;
 	}
 
 	/**
-	 * @return The maximal longitude or 0 if the bounding box has not been initialized
+	 * @return The maximal longitude or 0 if the bounding box has not been
+	 *         initialized
 	 */
 	public double getMaxLon() {
-		if(!initialized) {
+		if (!initialized) {
 			return 0;
 		}
 		return maxLon;
@@ -159,9 +176,8 @@ public class Bounds {
 	 */
 	@Override
 	public String toString() {
-		return "{ minLat: " + StringUtil.formatCoordinate(getMinLat()) +
-				", minLon: " + StringUtil.formatCoordinate(getMinLon()) +
-				", maxLat: " + StringUtil.formatCoordinate(getMaxLat()) +
-				", maxLon: " + StringUtil.formatCoordinate(getMaxLon()) + " }";
+		return "{ minLat: " + StringUtil.formatCoordinate(getMinLat()) + ", minLon: "
+				+ StringUtil.formatCoordinate(getMinLon()) + ", maxLat: " + StringUtil.formatCoordinate(getMaxLat())
+				+ ", maxLon: " + StringUtil.formatCoordinate(getMaxLon()) + " }";
 	}
 }

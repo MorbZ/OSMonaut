@@ -45,6 +45,7 @@ import org.openstreetmap.osmosis.osmbinary.file.BlockInputStream;
 
 /**
  * The base OSMonaut class that handles scanning of an OSM .pbf file.
+ * 
  * @author MorbZ
  */
 public class Osmonaut {
@@ -55,78 +56,86 @@ public class Osmonaut {
 
 	private EntityCache nodeCache = new EntityCache();
 	private EntityCache wayCache = new EntityCache();
-	
+
 	// Dummy method for exporting as runnable JAR
 	public static void main(String[] args) {
-		
+
 	}
-	
+
 	/**
-	 * @param filename The name of the .pbf file to scan
-	 * @param filter The entity filter that tells which entities should be scanned
+	 * @param filename
+	 *            The name of the .pbf file to scan
+	 * @param filter
+	 *            The entity filter that tells which entities should be scanned
 	 */
 	public Osmonaut(String filename, EntityFilter filter) {
 		this.file = new File(filename);
 		this.filter = filter;
 	}
-	
+
 	/**
-	 * @param filename The name of the .pbf file to scan
-	 * @param filter The entity filter that tells which entities should be scanned
-	 * @param wayNodeTags Whether way-nodes should have tags. Disabling lowers memory usage.
+	 * @param filename
+	 *            The name of the .pbf file to scan
+	 * @param filter
+	 *            The entity filter that tells which entities should be scanned
+	 * @param wayNodeTags
+	 *            Whether way-nodes should have tags. Disabling lowers memory
+	 *            usage.
 	 */
 	public Osmonaut(String filename, EntityFilter filter, boolean wayNodeTags) {
 		this.file = new File(filename);
 		this.filter = filter;
 		this.wayNodeTags = wayNodeTags;
 	}
-	
+
 	/**
 	 * Starts the scanning process.
-	 * @param receiver The object that will receive the OSM entities
+	 * 
+	 * @param receiver
+	 *            The object that will receive the OSM entities
 	 */
 	public void scan(IOsmonautReceiver receiver) {
 		this.receiver = receiver;
-		
+
 		System.out.println("OSMonaut started");
-		
+
 		// Check if file exists
-		if(!file.exists()) {
+		if (!file.exists()) {
 			System.out.println("E: Input file does not exist");
 			return;
 		}
-		
+
 		// Check if there is at least 1 needed entity type
 		boolean somethingNeeded = false;
-		for(EntityType type : EntityType.values()) {
-			if(filter.getEntityAllowed(type)) {
+		for (EntityType type : EntityType.values()) {
+			if (filter.getEntityAllowed(type)) {
 				somethingNeeded = true;
 				break;
 			}
 		}
-		if(!somethingNeeded) {
+		if (!somethingNeeded) {
 			System.out.println("Nothing to scan");
 			return;
 		}
-		
+
 		// Scan relations
-		if(filter.getEntityAllowed(EntityType.RELATION)) {
+		if (filter.getEntityAllowed(EntityType.RELATION)) {
 			System.out.println("Scanning relations...");
 			scanRelations();
 		}
-		
+
 		// Scan ways
-		if(filter.getEntityAllowed(EntityType.WAY) || wayCache.size() != 0) {
+		if (filter.getEntityAllowed(EntityType.WAY) || wayCache.size() != 0) {
 			System.out.println("Scanning ways...");
 			scanWays();
 		}
-		
+
 		// Final scan
 		System.out.println("Final scan...");
 		finalScan();
 	}
-	
-	/** 
+
+	/**
 	 * This scan gets the IDs of all members of required relations.
 	 */
 	private void scanRelations() {
@@ -134,14 +143,14 @@ public class Osmonaut {
 			@Override
 			public void foundRelation(Relation relation) {
 				// Is needed?
-				if(!entityNeededForReceiver(relation)) {
+				if (!entityNeededForReceiver(relation)) {
 					return;
 				}
-				
+
 				// Get all member IDs
-				for(RelationMember member : relation.getMembers()) {
+				for (RelationMember member : relation.getMembers()) {
 					// Member type
-					switch(member.getEntity().getEntityType()) {
+					switch (member.getEntity().getEntityType()) {
 					case NODE:
 						nodeCache.addNeeded(member.getEntity().getId());
 						break;
@@ -154,14 +163,14 @@ public class Osmonaut {
 					}
 				}
 			}
-			
+
 			@Override
 			public EntityFilter getEntityFilter() {
 				return new EntityFilter(false, false, true);
 			}
 		});
 	}
-	
+
 	/**
 	 * This scan gets the IDs of all nodes of required ways.
 	 */
@@ -170,23 +179,23 @@ public class Osmonaut {
 			@Override
 			public void foundWay(Way way) {
 				// Is needed?
-				if(!entityNeededForReceiver(way) && !wayCache.isNeeded(way.getId())) {
+				if (!entityNeededForReceiver(way) && !wayCache.isNeeded(way.getId())) {
 					return;
 				}
-				
+
 				// Add all node IDs
-				for(Node node : way.getNodes()) {
+				for (Node node : way.getNodes()) {
 					nodeCache.addNeeded(node.getId());
 				}
 			}
-			
+
 			@Override
 			public EntityFilter getEntityFilter() {
 				return new EntityFilter(false, true, false);
 			}
 		});
 	}
-	
+
 	/**
 	 * This scan is executed when all required nodes and ways are cached.
 	 */
@@ -195,67 +204,67 @@ public class Osmonaut {
 			@Override
 			public void foundNode(Node node) {
 				// Is needed by receiver?
-				if(entityNeededForReceiver(node)) {
+				if (entityNeededForReceiver(node)) {
 					receiver.foundEntity(node);
 				}
-				
+
 				// Is needed for ways/relations?
-				if(nodeCache.isNeeded(node.getId())) {
-					if(!wayNodeTags) {
+				if (nodeCache.isNeeded(node.getId())) {
+					if (!wayNodeTags) {
 						// Remove tags
 						node = new Node(node.getId(), null, node.getLatlon());
 					}
 					nodeCache.addEntity(node);
 				}
 			}
-			
+
 			@Override
-			public void foundWay(Way way) { 
+			public void foundWay(Way way) {
 				// Is needed?
-				if(!entityNeededForReceiver(way) && !wayCache.isNeeded(way.getId())) {
+				if (!entityNeededForReceiver(way) && !wayCache.isNeeded(way.getId())) {
 					return;
 				}
-				
+
 				// Assemble nodes
 				List<Node> nodes = new ArrayList<Node>();
-				for(Node incompleteNode : way.getNodes()) {
-					Node node = (Node)nodeCache.getEntity(incompleteNode.getId());
-					if(node == null) {
+				for (Node incompleteNode : way.getNodes()) {
+					Node node = (Node) nodeCache.getEntity(incompleteNode.getId());
+					if (node == null) {
 						System.out.println("E: Node for way not found");
 					} else {
 						nodes.add(node);
 					}
 				}
-				
+
 				// Assemble way
 				Way newWay = new Way(way.getId(), way.getTags(), nodes);
-				
+
 				// Is needed by receiver?
-				if(entityNeededForReceiver(way)) {
+				if (entityNeededForReceiver(way)) {
 					receiver.foundEntity(newWay);
 				}
-				
+
 				// Is needed for relations?
-				if(wayCache.isNeeded(way.getId())) {
+				if (wayCache.isNeeded(way.getId())) {
 					wayCache.addEntity(newWay);
 				}
 			}
-			
+
 			@Override
 			public void foundRelation(Relation relation) {
 				// Is needed?
-				if(!entityNeededForReceiver(relation)) {
+				if (!entityNeededForReceiver(relation)) {
 					return;
 				}
-				
+
 				// Assemble members
 				boolean incomplete = false;
 				List<RelationMember> members = new ArrayList<RelationMember>();
-				for(RelationMember member : relation.getMembers()) {
+				for (RelationMember member : relation.getMembers()) {
 					// Get real entity
 					long id = member.getEntity().getId();
 					Entity entity = null;
-					switch(member.getEntity().getEntityType()) {
+					switch (member.getEntity().getEntityType()) {
 					case NODE:
 						entity = nodeCache.getEntity(id);
 						break;
@@ -265,28 +274,27 @@ public class Osmonaut {
 					default:
 						break;
 					}
-					
+
 					// Add entity
-					if(entity == null) {
-						//System.out.println("E: Missing relation member");
+					if (entity == null) {
+						// System.out.println("E: Missing relation member");
 						incomplete = true;
 					} else {
 						members.add(new RelationMember(entity, member.getRole()));
 					}
 				}
-				
+
 				// Assemble relation
-				Relation newRelation = new Relation(relation.getId(), relation.getTags(), members, 
-					incomplete);
+				Relation newRelation = new Relation(relation.getId(), relation.getTags(), members, incomplete);
 				receiver.foundEntity(newRelation);
 			}
-			
+
 			@Override
 			public EntityFilter getEntityFilter() {
 				EntityFilter myFilter;
-				if(filter.getEntityAllowed(EntityType.RELATION)) {
+				if (filter.getEntityAllowed(EntityType.RELATION)) {
 					myFilter = new EntityFilter(true, true, true);
-				} else if(filter.getEntityAllowed(EntityType.WAY)) {
+				} else if (filter.getEntityAllowed(EntityType.WAY)) {
 					myFilter = new EntityFilter(true, true, false);
 				} else {
 					myFilter = new EntityFilter(true, false, false);
@@ -295,26 +303,31 @@ public class Osmonaut {
 			}
 		});
 	}
-	
+
 	/**
-	 * Checks if the receiver needs this entity type in general and also exactly this entity. 
-	 * @param entity The entity to check
+	 * Checks if the receiver needs this entity type in general and also exactly
+	 * this entity.
+	 * 
+	 * @param entity
+	 *            The entity to check
 	 * @return True if the receiver needs this entity
 	 */
 	private boolean entityNeededForReceiver(Entity entity) {
 		EntityType type = entity.getEntityType();
-		if(!filter.getEntityAllowed(type)) {
+		if (!filter.getEntityAllowed(type)) {
 			return false;
 		}
-		if(!receiver.needsEntity(type, entity.getTags())) {
+		if (!receiver.needsEntity(type, entity.getTags())) {
 			return false;
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Starts a single scan run.
-	 * @param sink The sink to use
+	 * 
+	 * @param sink
+	 *            The sink to use
 	 */
 	private void scanFile(final OsmonautSink sink) {
 		try {

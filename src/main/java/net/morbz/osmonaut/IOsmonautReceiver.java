@@ -28,23 +28,30 @@ import net.morbz.osmonaut.osm.EntityType;
 import net.morbz.osmonaut.osm.Entity;
 import net.morbz.osmonaut.osm.Tags;
 
-/** 
+/**
  * The receiver for entities that Osmonaut has found.
+ * 
  * @author MorbZ
  */
 public interface IOsmonautReceiver {
 	/**
-	 * Checks if that entity is needed. This prevents loading unnecessary entities into the memory.
-	 * @param type The type of the entity
-	 * @param tags The tags of the entity
+	 * Checks if that entity is needed. This prevents loading unnecessary
+	 * entities into the memory.
+	 * 
+	 * @param type
+	 *            The type of the entity
+	 * @param tags
+	 *            The tags of the entity
 	 * @return true if entity is needed
 	 */
 	public boolean needsEntity(EntityType type, Tags tags);
-	
+
 	/**
-	 * Called when Osmonaut has found an entity. This is only called if needsEntity() returned true 
-	 * for this entity.
-	 * @param entity The entity
+	 * Called when Osmonaut has found an entity. This is only called if
+	 * needsEntity() returned true for this entity.
+	 * 
+	 * @param entity
+	 *            The entity
 	 */
 	public void foundEntity(Entity entity);
 }

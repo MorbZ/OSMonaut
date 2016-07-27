@@ -29,29 +29,40 @@ import net.morbz.osmonaut.osm.Node;
 import net.morbz.osmonaut.osm.Relation;
 import net.morbz.osmonaut.osm.Way;
 
-/** 
- * The sink that connects the Osmosis binary parser with Osmonaut. 
+/**
+ * The sink that connects the Osmosis binary parser with Osmonaut.
+ * 
  * @author MorbZ
  */
 public abstract class OsmonautSink {
 	/**
 	 * The parser found a node.
-	 * @param node The full node
+	 * 
+	 * @param node
+	 *            The full node
 	 */
-	public void foundNode(Node node) { }
-	
+	public void foundNode(Node node) {
+	}
+
 	/**
 	 * The parser found a way.
-	 * @param way The way with placeholder nodes in it that just have an ID.
+	 * 
+	 * @param way
+	 *            The way with placeholder nodes in it that just have an ID.
 	 */
-	public void foundWay(Way way) { }
-	
+	public void foundWay(Way way) {
+	}
+
 	/**
 	 * The parser found a relation.
-	 * @param relation The relation with placeholder members that just have a role and an ID.
+	 * 
+	 * @param relation
+	 *            The relation with placeholder members that just have a role
+	 *            and an ID.
 	 */
-	public void foundRelation(Relation relation) { }
-	
+	public void foundRelation(Relation relation) {
+	}
+
 	/**
 	 * @return The entity filter that is used to optimize the parser.
 	 */

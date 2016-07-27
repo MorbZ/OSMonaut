@@ -31,38 +31,42 @@ import net.morbz.osmonaut.util.StringUtil;
 
 /**
  * A class that represents an OSM relation element.
+ * 
  * @author MorbZ
  */
 public class Relation extends Entity {
 	private List<RelationMember> members;
 	private boolean isIncomplete;
-	
+
 	/**
-	 * @return Whether this relation is incomplete. Incomplete means that not all relation members 
-	 * are present in the data set
+	 * @return Whether this relation is incomplete. Incomplete means that not
+	 *         all relation members are present in the data set
 	 */
 	public boolean isIncomplete() {
 		return isIncomplete;
 	}
 
 	/**
-	 * @param id The OSM-ID of this relation
-	 * @param tags The tags of this relation
-	 * @param members The members of this relation
+	 * @param id
+	 *            The OSM-ID of this relation
+	 * @param tags
+	 *            The tags of this relation
+	 * @param members
+	 *            The members of this relation
 	 */
 	public Relation(long id, Tags tags, List<RelationMember> members, boolean isIncomplete) {
 		super(id, tags);
 		this.members = members;
 		this.isIncomplete = isIncomplete;
 	}
-	
+
 	/**
 	 * @return The members of this relation
 	 */
 	public List<RelationMember> getMembers() {
 		return members;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -70,37 +74,37 @@ public class Relation extends Entity {
 	public EntityType getEntityType() {
 		return EntityType.RELATION;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public LatLon getCenter() {
 		Bounds bounds = new Bounds();
-		for(RelationMember member : members) {
+		for (RelationMember member : members) {
 			LatLon center = member.getEntity().getCenter();
-			if(center != null) {
+			if (center != null) {
 				bounds.extend(center);
 			}
 		}
 		return bounds.getCenter();
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public Bounds getBounds() {
 		Bounds bounds = new Bounds();
-		for(RelationMember member : members) {
+		for (RelationMember member : members) {
 			Bounds memberBounds = member.getEntity().getBounds();
-			if(memberBounds != null) {
+			if (memberBounds != null) {
 				bounds.extend(memberBounds);
 			}
 		}
-		return bounds;	
+		return bounds;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -111,11 +115,11 @@ public class Relation extends Entity {
 		str += "\t" + "id: " + id + "\n";
 		str += "\t" + "tags: " + StringUtil.indent(tags.toString());
 		str += "\t" + "members: [" + "\n";
-		for(RelationMember member : members) {
+		for (RelationMember member : members) {
 			str += StringUtil.indent(StringUtil.indent(member.toString()));
 		}
 		str += "\t" + "]" + "\n";
 		str += "}";
-		return str;		
+		return str;
 	}
 }

@@ -29,28 +29,32 @@ import net.morbz.osmonaut.util.StringUtil;
 
 /**
  * A class that represents an OSM node element.
+ * 
  * @author MorbZ
  */
 public class Node extends Entity {
 	private LatLon latlon;
-	
+
 	/**
-	 * @param id The OSM-ID of this node
-	 * @param tags The tags of this node
-	 * @param latlon The coordinates of this node
+	 * @param id
+	 *            The OSM-ID of this node
+	 * @param tags
+	 *            The tags of this node
+	 * @param latlon
+	 *            The coordinates of this node
 	 */
 	public Node(long id, Tags tags, LatLon latlon) {
 		super(id, tags);
 		this.latlon = latlon;
 	}
-	
+
 	/**
 	 * @return The coordinates of this node
 	 */
 	public LatLon getLatlon() {
 		return latlon;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -58,7 +62,7 @@ public class Node extends Entity {
 	public EntityType getEntityType() {
 		return EntityType.NODE;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -66,7 +70,7 @@ public class Node extends Entity {
 	public LatLon getCenter() {
 		return latlon;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -76,7 +80,7 @@ public class Node extends Entity {
 		bounds.extend(latlon);
 		return bounds;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */

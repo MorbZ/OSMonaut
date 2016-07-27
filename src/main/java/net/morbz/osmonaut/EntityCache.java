@@ -32,54 +32,62 @@ import java.util.Set;
 import net.morbz.osmonaut.osm.Entity;
 
 /**
- * Holds the IDs for entities that are needed until provided with the full entity.
+ * Holds the IDs for entities that are needed until provided with the full
+ * entity.
+ * 
  * @author MorbZ
  */
 public class EntityCache {
 	private Set<Long> neededIds;
 	private Map<Long, Entity> entities;
-	
+
 	public EntityCache() {
 		neededIds = new HashSet<Long>();
 		entities = new HashMap<Long, Entity>();
 	}
-	
+
 	/**
 	 * Adds the ID to the list of needed IDs.
-	 * @param id The needed ID
+	 * 
+	 * @param id
+	 *            The needed ID
 	 */
 	public void addNeeded(long id) {
 		neededIds.add(id);
 	}
-	
+
 	/**
-	 * @param id The needed ID
+	 * @param id
+	 *            The needed ID
 	 * @return true if the entity with this ID is needed
 	 */
 	public boolean isNeeded(Long id) {
 		return neededIds.contains(id);
 	}
-	
-	/** 
+
+	/**
 	 * Adds a full entity. This will drop the needed ID.
-	 * @param entity The full entity
+	 * 
+	 * @param entity
+	 *            The full entity
 	 */
 	public void addEntity(Entity entity) {
 		// Remove from needed
 		neededIds.remove(entity.getId());
-		
+
 		// Add to entities
 		entities.put(entity.getId(), entity);
 	}
-	
+
 	/**
-	 * @param id The entity ID
+	 * @param id
+	 *            The entity ID
 	 * @return The full entity with that ID or null if there is no full entity
 	 */
 	public Entity getEntity(long id) {
 		return entities.get(id);
 	}
-	
+
 	/**
 	 * @return The combined number of needed and full entities
 	 */
