@@ -50,9 +50,9 @@ public class Osmonaut {
 
 	private final File file;
 	private final EntityFilter filter;
+	private final boolean wayNodeTags;
 
 	private IOsmonautReceiver receiver;
-	private boolean wayNodeTags = true;
 
 	// Dummy method for exporting as runnable JAR
 	public static void main(String[] args) {
@@ -66,8 +66,7 @@ public class Osmonaut {
 	 *            The entity filter that tells which entities should be scanned
 	 */
 	public Osmonaut(String filename, EntityFilter filter) {
-		this.file = new File(filename);
-		this.filter = filter;
+		this(filename, filter, true);
 	}
 
 	/**
