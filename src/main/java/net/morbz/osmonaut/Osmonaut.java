@@ -53,6 +53,7 @@ public class Osmonaut {
 	private final boolean wayNodeTags;
 
 	private IOsmonautReceiver receiver;
+	private final int processors;
 
 	// Dummy method for exporting as runnable JAR
 	public static void main(String[] args) {
@@ -79,9 +80,25 @@ public class Osmonaut {
 	 *            usage.
 	 */
 	public Osmonaut(String filename, EntityFilter filter, boolean wayNodeTags) {
+		this(filename, filter, wayNodeTags, Math.max(4, Runtime.getRuntime().availableProcessors()));
+	}
+
+	/**
+	 * @param filename
+	 *            The name of the .pbf file to scan
+	 * @param filter
+	 *            The entity filter that tells which entities should be scanned
+	 * @param wayNodeTags
+	 *            Whether way-nodes should have tags. Disabling lowers memory
+	 *            usage.
+	 * @param processors
+	 *            Number of processors to use to decode the pbf
+	 */
+	public Osmonaut(String filename, EntityFilter filter, boolean wayNodeTags, int processors) {
 		this.file = new File(filename);
 		this.filter = filter;
 		this.wayNodeTags = wayNodeTags;
+		this.processors = processors;
 	}
 
 	/**
@@ -326,7 +343,7 @@ public class Osmonaut {
 	 *            The sink to use
 	 */
 	private void scanFile(final OsmonautSink sink) {
-		PbfReader reader = new PbfReader(file, Runtime.getRuntime().availableProcessors());
+		PbfReader reader = new PbfReader(file, processors);
 		reader.setSink(SinkAdapter.adapt(sink));
 		reader.run();
 	}
