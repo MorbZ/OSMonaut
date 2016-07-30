@@ -32,8 +32,8 @@ import net.morbz.osmonaut.util.StringUtil;
  * @author MorbZ
  */
 public class RelationMember {
-	private Entity entity;
-	private String role;
+	private final Entity entity;
+	private final String role;
 
 	/**
 	 * @param entity

@@ -35,8 +35,8 @@ import net.morbz.osmonaut.util.StringUtil;
  * @author MorbZ
  */
 public class Relation extends Entity {
-	private List<RelationMember> members;
-	private boolean isIncomplete;
+	private final List<RelationMember> members;
+	private final boolean isIncomplete;
 
 	/**
 	 * @return Whether this relation is incomplete. Incomplete means that not

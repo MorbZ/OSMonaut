@@ -45,13 +45,14 @@ import net.morbz.osmonaut.osm.Way;
  * @author MorbZ
  */
 public class Osmonaut {
-	private File file;
-	private IOsmonautReceiver receiver;
-	private EntityFilter filter;
-	private boolean wayNodeTags = true;
+	private final EntityCache nodeCache = new EntityCache();
+	private final EntityCache wayCache = new EntityCache();
 
-	private EntityCache nodeCache = new EntityCache();
-	private EntityCache wayCache = new EntityCache();
+	private final File file;
+	private final EntityFilter filter;
+
+	private IOsmonautReceiver receiver;
+	private boolean wayNodeTags = true;
 
 	// Dummy method for exporting as runnable JAR
 	public static void main(String[] args) {

@@ -38,13 +38,8 @@ import net.morbz.osmonaut.osm.Entity;
  * @author MorbZ
  */
 public class EntityCache {
-	private Set<Long> neededIds;
-	private Map<Long, Entity> entities;
-
-	public EntityCache() {
-		neededIds = new HashSet<Long>();
-		entities = new HashMap<Long, Entity>();
-	}
+	private final Set<Long> neededIds = new HashSet<Long>();
+	private final Map<Long, Entity> entities = new HashMap<Long, Entity>();
 
 	/**
 	 * Adds the ID to the list of needed IDs.

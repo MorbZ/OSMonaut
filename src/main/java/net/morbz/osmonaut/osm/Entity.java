@@ -32,8 +32,8 @@ import net.morbz.osmonaut.geometry.Bounds;
  * @author MorbZ
  */
 public abstract class Entity {
-	protected long id;
-	protected Tags tags;
+	protected final long id;
+	protected final Tags tags;
 
 	/**
 	 * @param id

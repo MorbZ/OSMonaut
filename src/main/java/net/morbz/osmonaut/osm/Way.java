@@ -36,7 +36,7 @@ import net.morbz.osmonaut.util.StringUtil;
  * @author MorbZ
  */
 public class Way extends Entity {
-	private List<Node> nodes;
+	private final List<Node> nodes;
 
 	/**
 	 * @param id

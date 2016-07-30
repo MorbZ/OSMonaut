@@ -33,7 +33,7 @@ import net.morbz.osmonaut.util.StringUtil;
  * @author MorbZ
  */
 public class Node extends Entity {
-	private LatLon latlon;
+	private final LatLon latlon;
 
 	/**
 	 * @param id

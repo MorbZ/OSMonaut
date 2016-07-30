@@ -33,7 +33,9 @@ import net.morbz.osmonaut.osm.EntityType;
  * @author MorbZ
  */
 public class EntityFilter {
-	private boolean nodesAllowed, waysAllowed, relationsAllowed;
+	private boolean nodesAllowed;
+	private boolean waysAllowed;
+	private boolean relationsAllowed;
 
 	public EntityFilter() {
 		nodesAllowed = true;

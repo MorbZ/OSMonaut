@@ -32,8 +32,8 @@ import net.morbz.osmonaut.util.StringUtil;
  * @author MorbZ
  */
 public class LatLon {
-	private double lat;
-	private double lon;
+	private final double lat;
+	private final double lon;
 
 	/**
 	 * @param lat
