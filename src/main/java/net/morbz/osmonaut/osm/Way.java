@@ -32,28 +32,32 @@ import net.morbz.osmonaut.util.StringUtil;
 
 /**
  * A class that represents an OSM way element.
+ * 
  * @author MorbZ
  */
 public class Way extends Entity {
 	private List<Node> nodes;
-	
+
 	/**
-	 * @param id The OSM-ID of this way
-	 * @param tags The tags of this way
-	 * @param nodes The nodes of this way
+	 * @param id
+	 *            The OSM-ID of this way
+	 * @param tags
+	 *            The tags of this way
+	 * @param nodes
+	 *            The nodes of this way
 	 */
 	public Way(long id, Tags tags, List<Node> nodes) {
 		super(id, tags);
 		this.nodes = nodes;
 	}
-	
+
 	/**
 	 * @return The nodes of this way
 	 */
 	public List<Node> getNodes() {
 		return nodes;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -61,7 +65,7 @@ public class Way extends Entity {
 	public EntityType getEntityType() {
 		return EntityType.WAY;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
@@ -71,28 +75,30 @@ public class Way extends Entity {
 		Polygon poly = new Polygon(this);
 		return poly.getCenter();
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public Bounds getBounds() {
 		Bounds bounds = new Bounds();
-		for(Node node : nodes) {
+		for (Node node : nodes) {
 			bounds.extend(node.getLatlon());
 		}
 		return bounds;
 	}
-	
+
 	/**
-	 * Whether the way is closed. A closed way means its first and last nodes are identical.
+	 * Whether the way is closed. A closed way means its first and last nodes
+	 * are identical.
+	 * 
 	 * @return True if the way is closed
 	 */
 	public boolean isClosed() {
-		if(nodes.size() <= 2) {
+		if (nodes.size() <= 2) {
 			return false;
 		}
-		return nodes.get(0).equals(nodes.get(nodes.size()-1));
+		return nodes.get(0).equals(nodes.get(nodes.size() - 1));
 	}
 
 	/**
@@ -105,11 +111,11 @@ public class Way extends Entity {
 		str += "\t" + "id: " + id + "\n";
 		str += "\t" + "tags: " + StringUtil.indent(tags.toString());
 		str += "\t" + "nodes: [" + "\n";
-		for(Node node : nodes) {
+		for (Node node : nodes) {
 			str += StringUtil.indent(StringUtil.indent(node.toString()));
 		}
 		str += "\t" + "]" + "\n";
 		str += "}";
-		return str;		
+		return str;
 	}
 }

@@ -26,10 +26,9 @@ package net.morbz.osmonaut.osm;
 
 /**
  * Defines an OSM entity type.
+ * 
  * @author MorbZ
  */
 public enum EntityType {
-	NODE,
-	WAY,
-	RELATION
+	NODE, WAY, RELATION
 }

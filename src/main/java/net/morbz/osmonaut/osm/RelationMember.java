@@ -28,15 +28,18 @@ import net.morbz.osmonaut.util.StringUtil;
 
 /**
  * A class that represents a member of an OSM relation.
+ * 
  * @author MorbZ
  */
 public class RelationMember {
 	private Entity entity;
 	private String role;
-	
+
 	/**
-	 * @param entity The entity of this member
-	 * @param role The role of this member
+	 * @param entity
+	 *            The entity of this member
+	 * @param role
+	 *            The role of this member
 	 */
 	public RelationMember(Entity entity, String role) {
 		this.entity = entity;
@@ -56,7 +59,7 @@ public class RelationMember {
 	public String getRole() {
 		return role;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */

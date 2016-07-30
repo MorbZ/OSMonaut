@@ -28,6 +28,7 @@ import net.morbz.osmonaut.util.StringUtil;
 
 /**
  * A class that represents the latitude and longitude.
+ * 
  * @author MorbZ
  */
 public class LatLon {
@@ -35,14 +36,16 @@ public class LatLon {
 	private double lon;
 
 	/**
-	 * @param lat The latitude
-	 * @param lon The longitude
+	 * @param lat
+	 *            The latitude
+	 * @param lon
+	 *            The longitude
 	 */
 	public LatLon(double lat, double lon) {
 		this.lat = lat;
 		this.lon = lon;
 	}
-	
+
 	/**
 	 * @return The latitude
 	 */
@@ -56,31 +59,30 @@ public class LatLon {
 	public double getLon() {
 		return lon;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public boolean equals(Object obj) {
-		if(!(obj instanceof LatLon)) {
+		if (!(obj instanceof LatLon)) {
 			return false;
 		}
-		LatLon latlon = (LatLon)obj;
-		if(latlon.getLat() != lat) {
+		LatLon latlon = (LatLon) obj;
+		if (latlon.getLat() != lat) {
 			return false;
 		}
-		if(latlon.getLon() != lon) {
+		if (latlon.getLon() != lon) {
 			return false;
 		}
 		return true;
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 */
 	@Override
 	public String toString() {
-		return "{ lat: " + StringUtil.formatCoordinate(lat) + 
-				", lon: " + StringUtil.formatCoordinate(lon) + " }";
+		return "{ lat: " + StringUtil.formatCoordinate(lat) + ", lon: " + StringUtil.formatCoordinate(lon) + " }";
 	}
 }

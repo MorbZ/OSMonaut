@@ -25,42 +25,44 @@ package net.morbz.osmonaut.geometry;
 */
 
 /**
- * Defines a member of a multipolygon that can be either an inner or an outer polygon. The area of
- * inner polygon is not part of the multipolygon.
+ * Defines a member of a multipolygon that can be either an inner or an outer
+ * polygon. The area of inner polygon is not part of the multipolygon.
+ * 
  * @author MorbZ
  */
 public class MultiPolygonMember {
 	private Type type;
 	private Polygon polygon;
-	
+
 	/**
-	 * @param type The type of the polygon
-	 * @param polygon The polygon
+	 * @param type
+	 *            The type of the polygon
+	 * @param polygon
+	 *            The polygon
 	 */
 	public MultiPolygonMember(Type type, Polygon polygon) {
 		this.type = type;
 		this.polygon = polygon;
 	}
-	
+
 	/**
 	 * @return The type of the polygon
 	 */
 	public Type getType() {
 		return type;
 	}
-	
+
 	/**
 	 * @return The polygon
 	 */
 	public Polygon getPolygon() {
 		return polygon;
 	}
-	
+
 	/**
 	 * Enum for inner and outer types
 	 */
 	public enum Type {
-		INNER,
-		OUTER
+		INNER, OUTER
 	}
 }

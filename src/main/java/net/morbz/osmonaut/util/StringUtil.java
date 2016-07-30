@@ -28,26 +28,31 @@ import java.util.Locale;
 
 /**
  * Some custom string functions.
+ * 
  * @author MorbZ
  */
 public class StringUtil {
 	/**
 	 * Indents every line of the String by 1 tab.
-	 * @param str The string to indent
+	 * 
+	 * @param str
+	 *            The string to indent
 	 * @return The indented string
 	 */
 	public static String indent(String str) {
 		String[] lines = str.split("\\n");
 		String newStr = "";
-		for(String line : lines) {
+		for (String line : lines) {
 			newStr += "\t" + line + "\n";
 		}
 		return newStr;
 	}
-	
+
 	/**
 	 * Formats a coordinate for pretty output.
-	 * @param coord The coordinate to format
+	 * 
+	 * @param coord
+	 *            The coordinate to format
 	 * @return The formatted coordinate
 	 */
 	public static String formatCoordinate(double coord) {

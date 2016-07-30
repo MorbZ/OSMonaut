@@ -27,36 +27,42 @@ package net.morbz.osmonaut;
 import net.morbz.osmonaut.osm.EntityType;
 
 /**
- * This class is used to select which OSM entities are required. By default all entities are 
- * allowed.
+ * This class is used to select which OSM entities are required. By default all
+ * entities are allowed.
+ * 
  * @author MorbZ
  */
 public class EntityFilter {
 	private boolean nodesAllowed, waysAllowed, relationsAllowed;
-	
+
 	public EntityFilter() {
 		nodesAllowed = true;
 		waysAllowed = true;
 		relationsAllowed = true;
 	}
-	
+
 	/**
-	 * @param nodesAllowed True if nodes are allowed
-	 * @param waysAllowed True if ways are allowed
-	 * @param relationsAllowed True if relations are allowed
+	 * @param nodesAllowed
+	 *            True if nodes are allowed
+	 * @param waysAllowed
+	 *            True if ways are allowed
+	 * @param relationsAllowed
+	 *            True if relations are allowed
 	 */
 	public EntityFilter(boolean nodesAllowed, boolean waysAllowed, boolean relationsAllowed) {
 		this.nodesAllowed = nodesAllowed;
 		this.waysAllowed = waysAllowed;
 		this.relationsAllowed = relationsAllowed;
 	}
-	
+
 	/**
-	 * @param type The entity type
-	 * @param allowed True if the entity type is allowed
+	 * @param type
+	 *            The entity type
+	 * @param allowed
+	 *            True if the entity type is allowed
 	 */
 	public void setEntityAllowed(EntityType type, boolean allowed) {
-		switch(type) {
+		switch (type) {
 		case NODE:
 			nodesAllowed = allowed;
 			break;
@@ -68,13 +74,14 @@ public class EntityFilter {
 			break;
 		}
 	}
-	
+
 	/**
-	 * @param type The entity type
+	 * @param type
+	 *            The entity type
 	 * @return true if the entity type is allowed
 	 */
 	public boolean getEntityAllowed(EntityType type) {
-		switch(type) {
+		switch (type) {
 		case NODE:
 			return nodesAllowed;
 		case WAY:
