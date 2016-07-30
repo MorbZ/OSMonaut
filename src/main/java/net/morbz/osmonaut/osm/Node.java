@@ -24,6 +24,10 @@ package net.morbz.osmonaut.osm;
 * SOFTWARE.
 */
 
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+
 import net.morbz.osmonaut.geometry.Bounds;
 import net.morbz.osmonaut.util.StringUtil;
 
@@ -46,6 +50,13 @@ public class Node extends Entity {
 	public Node(long id, Tags tags, LatLon latlon) {
 		super(id, tags);
 		this.latlon = latlon;
+	}
+
+	/**
+	 * No-arg constructor for Externalizable
+	 */
+	public Node() {
+
 	}
 
 	/**
@@ -93,5 +104,25 @@ public class Node extends Entity {
 		str += "\t" + "tags: " + StringUtil.indent(tags.toString());
 		str += "}";
 		return str;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void writeExternal(ObjectOutput out) throws IOException {
+		super.writeExternal(out);
+
+		out.writeObject(latlon);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+		super.readExternal(in);
+
+		latlon = (LatLon)in.readObject();
 	}
 }

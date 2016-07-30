@@ -24,6 +24,9 @@ package net.morbz.osmonaut.osm;
 * SOFTWARE.
 */
 
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.List;
 
 import net.morbz.osmonaut.geometry.Bounds;
@@ -58,6 +61,13 @@ public class Relation extends Entity {
 		super(id, tags);
 		this.members = members;
 		this.isIncomplete = isIncomplete;
+	}
+
+	/**
+	 * No-arg constructor for Externalizable
+	 */
+	public Relation() {
+
 	}
 
 	/**
@@ -121,5 +131,28 @@ public class Relation extends Entity {
 		str += "\t" + "]" + "\n";
 		str += "}";
 		return str;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void writeExternal(ObjectOutput out) throws IOException {
+		super.writeExternal(out);
+
+		out.writeObject(members);
+		out.writeBoolean(isIncomplete);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+		super.readExternal(in);
+
+		members = (List<RelationMember>)in.readObject();
+		isIncomplete = in.readBoolean();
 	}
 }

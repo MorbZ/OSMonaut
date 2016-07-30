@@ -24,6 +24,10 @@ package net.morbz.osmonaut.osm;
 * SOFTWARE.
 */
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -34,7 +38,7 @@ import java.util.List;
  * 
  * @author MorbZ
  */
-public class Tags implements Iterable<String> {
+public class Tags implements Iterable<String>, Externalizable {
 	private List<String> keys, values;
 
 	/**
@@ -190,5 +194,24 @@ public class Tags implements Iterable<String> {
 		}
 		str += "]";
 		return str;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void writeExternal(ObjectOutput out) throws IOException {
+		out.writeObject(keys);
+		out.writeObject(values);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+		keys = (List<String>)in.readObject();
+		values = (List<String>)in.readObject();
 	}
 }

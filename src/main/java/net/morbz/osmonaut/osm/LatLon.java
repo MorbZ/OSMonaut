@@ -24,6 +24,11 @@ package net.morbz.osmonaut.osm;
 * SOFTWARE.
 */
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+
 import net.morbz.osmonaut.util.StringUtil;
 
 /**
@@ -31,7 +36,7 @@ import net.morbz.osmonaut.util.StringUtil;
  * 
  * @author MorbZ
  */
-public class LatLon {
+public class LatLon implements Externalizable {
 	private double lat;
 	private double lon;
 
@@ -44,6 +49,13 @@ public class LatLon {
 	public LatLon(double lat, double lon) {
 		this.lat = lat;
 		this.lon = lon;
+	}
+
+	/**
+	 * No-arg constructor for Externalizable
+	 */
+	public LatLon() {
+
 	}
 
 	/**
@@ -84,5 +96,23 @@ public class LatLon {
 	@Override
 	public String toString() {
 		return "{ lat: " + StringUtil.formatCoordinate(lat) + ", lon: " + StringUtil.formatCoordinate(lon) + " }";
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void writeExternal(ObjectOutput out) throws IOException {
+		out.writeDouble(lat);
+		out.writeDouble(lon);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+		this.lat = in.readDouble();
+		this.lon = in.readDouble();
 	}
 }

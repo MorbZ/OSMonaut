@@ -28,6 +28,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.mapdb.DB;
+import org.mapdb.DBMaker;
 import org.openstreetmap.osmosis.pbf2.v0_6.PbfReader;
 
 import net.morbz.osmonaut.binary.OsmonautSink;
@@ -49,9 +51,10 @@ public class Osmonaut {
 	private IOsmonautReceiver receiver;
 	private EntityFilter filter;
 	private boolean wayNodeTags = true;
+	private boolean storeOnDisk = false;
 
-	private EntityCache nodeCache = new EntityCache();
-	private EntityCache wayCache = new EntityCache();
+	private EntityCache nodeCache;
+	private EntityCache wayCache;
 
 	// Dummy method for exporting as runnable JAR
 	public static void main(String[] args) {
@@ -77,7 +80,10 @@ public class Osmonaut {
 	 * @param wayNodeTags
 	 *            Whether way-nodes should have tags. Disabling lowers memory
 	 *            usage.
+	 * 
+	 * @deprecated Use setWayNodeTags() instead. 
 	 */
+	@Deprecated
 	public Osmonaut(String filename, EntityFilter filter, boolean wayNodeTags) {
 		this.file = new File(filename);
 		this.filter = filter;
@@ -112,6 +118,22 @@ public class Osmonaut {
 		if (!somethingNeeded) {
 			System.out.println("Nothing to scan");
 			return;
+		}
+
+		// Create caches
+		if(storeOnDisk) {
+			// Create MapDB database
+			DB db = DBMaker.tempFileDB()
+					.closeOnJvmShutdown()
+					.fileMmapEnableIfSupported()
+					.fileChannelEnable()
+					.make();
+
+			nodeCache = new EntityCache(db, "node");
+			wayCache = new EntityCache(db, "way");
+		} else {
+			nodeCache = new EntityCache();
+			wayCache = new EntityCache();
 		}
 
 		// Scan relations
@@ -329,5 +351,22 @@ public class Osmonaut {
 		PbfReader reader = new PbfReader(file, Runtime.getRuntime().availableProcessors());
 		reader.setSink(SinkAdapter.adapt(sink));
 		reader.run();
+	}
+
+	/* Settings */
+	/**
+	 * @param wayNodeTags Whether way-nodes should have tags. Disabling lowers memory usage. 
+	 * Defaults to 'true'.
+	 */
+	public void setWayNodeTags(boolean wayNodeTags) {
+		this.wayNodeTags = wayNodeTags;
+	}
+
+	/**
+	 * @param storeOnDisk Whether entity caches should be stored on disk. Enabling this leads to 
+	 * lower memory usage but takes more time. Defaults to 'false'.
+	 */
+	public void setStoreOnDisk(boolean storeOnDisk) {
+		this.storeOnDisk = storeOnDisk;
 	}
 }

@@ -24,6 +24,9 @@ package net.morbz.osmonaut.osm;
 * SOFTWARE.
 */
 
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
 import java.util.List;
 
 import net.morbz.osmonaut.geometry.Bounds;
@@ -49,6 +52,13 @@ public class Way extends Entity {
 	public Way(long id, Tags tags, List<Node> nodes) {
 		super(id, tags);
 		this.nodes = nodes;
+	}
+
+	/**
+	 * No-arg constructor for Externalizable
+	 */
+	public Way() {
+
 	}
 
 	/**
@@ -117,5 +127,26 @@ public class Way extends Entity {
 		str += "\t" + "]" + "\n";
 		str += "}";
 		return str;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void writeExternal(ObjectOutput out) throws IOException {
+		super.writeExternal(out);
+
+		out.writeObject(nodes);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@SuppressWarnings("unchecked")
+	@Override
+	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+		super.readExternal(in);
+
+		nodes = (List<Node>)in.readObject();
 	}
 }

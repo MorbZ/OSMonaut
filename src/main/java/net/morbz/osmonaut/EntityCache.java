@@ -29,6 +29,9 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.mapdb.DB;
+import org.mapdb.Serializer;
+
 import net.morbz.osmonaut.osm.Entity;
 
 /**
@@ -54,6 +57,19 @@ public class EntityCache {
 	 */
 	public void addNeeded(long id) {
 		neededIds.add(id);
+	}
+
+	/**
+	 * Constructor for using MapDB
+	 * @param db The MapDB database
+	 * @param name Unique identifier for this object
+	 */
+	@SuppressWarnings("unchecked")
+	public EntityCache(DB db, String name) {
+		neededIds = db.treeSet(name + "_ids", Serializer.LONG).create();
+		entities = (Map<Long, Entity>)db.treeMap(name + "_entities")
+				.keySerializer(Serializer.LONG)
+				.create();
 	}
 
 	/**

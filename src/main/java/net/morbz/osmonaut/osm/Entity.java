@@ -24,6 +24,11 @@ package net.morbz.osmonaut.osm;
 * SOFTWARE.
 */
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+
 import net.morbz.osmonaut.geometry.Bounds;
 
 /**
@@ -31,7 +36,7 @@ import net.morbz.osmonaut.geometry.Bounds;
  * 
  * @author MorbZ
  */
-public abstract class Entity {
+public abstract class Entity implements Externalizable {
 	protected long id;
 	protected Tags tags;
 
@@ -44,6 +49,13 @@ public abstract class Entity {
 	public Entity(long id, Tags tags) {
 		this.id = id;
 		this.tags = tags;
+	}
+
+	/**
+	 * No-arg constructor for Externalizable
+	 */
+	public Entity() {
+
 	}
 
 	/**
@@ -99,4 +111,22 @@ public abstract class Entity {
 	 * @return The surrounding bounding box
 	 */
 	public abstract Bounds getBounds();
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void writeExternal(ObjectOutput out) throws IOException {
+		out.writeLong(id);
+		out.writeObject(tags);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+		id = in.readLong();
+		tags = (Tags)in.readObject();
+	}
 }

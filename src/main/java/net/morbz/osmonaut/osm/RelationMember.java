@@ -24,6 +24,11 @@ package net.morbz.osmonaut.osm;
 * SOFTWARE.
 */
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+
 import net.morbz.osmonaut.util.StringUtil;
 
 /**
@@ -31,7 +36,7 @@ import net.morbz.osmonaut.util.StringUtil;
  * 
  * @author MorbZ
  */
-public class RelationMember {
+public class RelationMember implements Externalizable {
 	private Entity entity;
 	private String role;
 
@@ -44,6 +49,13 @@ public class RelationMember {
 	public RelationMember(Entity entity, String role) {
 		this.entity = entity;
 		this.role = role;
+	}
+
+	/**
+	 * No-arg constructor for Externalizable
+	 */
+	public RelationMember() {
+
 	}
 
 	/**
@@ -71,5 +83,23 @@ public class RelationMember {
 		str += StringUtil.indent(entity.toString()) + "\n";
 		str += "}";
 		return str;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void writeExternal(ObjectOutput out) throws IOException {
+		out.writeObject(entity);
+		out.writeObject(role);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+		entity = (Entity)in.readObject();
+		role = (String)in.readObject();
 	}
 }
