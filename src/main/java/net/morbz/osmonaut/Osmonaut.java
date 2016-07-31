@@ -47,8 +47,8 @@ import net.morbz.osmonaut.osm.Way;
  * @author MorbZ
  */
 public class Osmonaut {
-	private EntityCache nodeCache;
-	private EntityCache wayCache;
+	private EntityCache<Node> nodeCache;
+	private EntityCache<Way> wayCache;
 
 	private final File file;
 	private final EntityFilter filter;
@@ -131,11 +131,11 @@ public class Osmonaut {
 					.fileChannelEnable()
 					.make();
 
-			nodeCache = new EntityCache(db, "node");
-			wayCache = new EntityCache(db, "way");
+			nodeCache = new EntityCache<Node>(db, "node");
+			wayCache = new EntityCache<Way>(db, "way");
 		} else {
-			nodeCache = new EntityCache();
-			wayCache = new EntityCache();
+			nodeCache = new EntityCache<Node>();
+			wayCache = new EntityCache<Way>();
 		}
 
 		// Scan relations
@@ -248,7 +248,7 @@ public class Osmonaut {
 				// Assemble nodes
 				List<Node> nodes = new ArrayList<Node>();
 				for (Node incompleteNode : way.getNodes()) {
-					Node node = (Node) nodeCache.getEntity(incompleteNode.getId());
+					Node node = nodeCache.getEntity(incompleteNode.getId());
 					if (node == null) {
 						System.out.println("E: Node for way not found");
 					} else {

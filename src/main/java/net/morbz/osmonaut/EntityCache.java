@@ -40,13 +40,13 @@ import net.morbz.osmonaut.osm.Entity;
  * 
  * @author MorbZ
  */
-public class EntityCache {
+public class EntityCache<T extends Entity> {
 	private Set<Long> neededIds;
-	private Map<Long, Entity> entities;
+	private Map<Long, T> entities;
 
 	public EntityCache() {
 		neededIds = new HashSet<Long>();
-		entities = new HashMap<Long, Entity>();
+		entities = new HashMap<Long, T>();
 	}
 
 	/**
@@ -57,7 +57,7 @@ public class EntityCache {
 	@SuppressWarnings("unchecked")
 	public EntityCache(DB db, String name) {
 		neededIds = db.treeSet(name + "_ids", Serializer.LONG).create();
-		entities = (Map<Long, Entity>)db.treeMap(name + "_entities")
+		entities = (Map<Long, T>)db.treeMap(name + "_entities")
 				.keySerializer(Serializer.LONG)
 				.create();
 	}
@@ -87,7 +87,7 @@ public class EntityCache {
 	 * @param entity
 	 *            The full entity
 	 */
-	public void addEntity(Entity entity) {
+	public void addEntity(T entity) {
 		// Remove from needed
 		neededIds.remove(entity.getId());
 
@@ -100,7 +100,7 @@ public class EntityCache {
 	 *            The entity ID
 	 * @return The full entity with that ID or null if there is no full entity
 	 */
-	public Entity getEntity(long id) {
+	public T getEntity(long id) {
 		return entities.get(id);
 	}
 
