@@ -47,14 +47,16 @@ import net.morbz.osmonaut.osm.Way;
  * @author MorbZ
  */
 public class Osmonaut {
-	private File file;
-	private IOsmonautReceiver receiver;
-	private EntityFilter filter;
-	private boolean wayNodeTags = true;
-	private boolean storeOnDisk = false;
-
 	private EntityCache nodeCache;
 	private EntityCache wayCache;
+
+	private final File file;
+	private final EntityFilter filter;
+	private IOsmonautReceiver receiver;
+
+	private boolean wayNodeTags = true;
+	private int processors;
+	private boolean storeOnDisk = false;
 
 	// Dummy method for exporting as runnable JAR
 	public static void main(String[] args) {
@@ -70,6 +72,7 @@ public class Osmonaut {
 	public Osmonaut(String filename, EntityFilter filter) {
 		this.file = new File(filename);
 		this.filter = filter;
+		processors = Math.max(4, Runtime.getRuntime().availableProcessors());
 	}
 
 	/**
@@ -85,8 +88,7 @@ public class Osmonaut {
 	 */
 	@Deprecated
 	public Osmonaut(String filename, EntityFilter filter, boolean wayNodeTags) {
-		this.file = new File(filename);
-		this.filter = filter;
+		this(filename, filter);
 		this.wayNodeTags = wayNodeTags;
 	}
 
@@ -348,7 +350,7 @@ public class Osmonaut {
 	 *            The sink to use
 	 */
 	private void scanFile(final OsmonautSink sink) {
-		PbfReader reader = new PbfReader(file, Runtime.getRuntime().availableProcessors());
+		PbfReader reader = new PbfReader(file, processors);
 		reader.setSink(SinkAdapter.adapt(sink));
 		reader.run();
 	}
@@ -360,6 +362,14 @@ public class Osmonaut {
 	 */
 	public void setWayNodeTags(boolean wayNodeTags) {
 		this.wayNodeTags = wayNodeTags;
+	}
+
+	/**
+	 * @param processors Number of processors to use to decode the pbf. By default all available
+	 * processors are used.
+	 */
+	public void setProcessors(int processors) {
+		this.processors = processors;
 	}
 
 	/**

@@ -39,7 +39,8 @@ import java.util.List;
  * @author MorbZ
  */
 public class Tags implements Iterable<String>, Externalizable {
-	private List<String> keys, values;
+	private List<String> keys;
+	private List<String> values;
 
 	/**
 	 * Lazy creation of the arrays.

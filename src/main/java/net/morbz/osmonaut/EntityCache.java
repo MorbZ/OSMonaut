@@ -50,16 +50,6 @@ public class EntityCache {
 	}
 
 	/**
-	 * Adds the ID to the list of needed IDs.
-	 * 
-	 * @param id
-	 *            The needed ID
-	 */
-	public void addNeeded(long id) {
-		neededIds.add(id);
-	}
-
-	/**
 	 * Constructor for using MapDB
 	 * @param db The MapDB database
 	 * @param name Unique identifier for this object
@@ -70,6 +60,16 @@ public class EntityCache {
 		entities = (Map<Long, Entity>)db.treeMap(name + "_entities")
 				.keySerializer(Serializer.LONG)
 				.create();
+	}
+
+	/**
+	 * Adds the ID to the list of needed IDs.
+	 * 
+	 * @param id
+	 *            The needed ID
+	 */
+	public void addNeeded(long id) {
+		neededIds.add(id);
 	}
 
 	/**
