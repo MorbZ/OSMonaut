@@ -72,7 +72,7 @@ public class Osmonaut {
 	public Osmonaut(String filename, EntityFilter filter) {
 		this.file = new File(filename);
 		this.filter = filter;
-		processors = Math.max(4, Runtime.getRuntime().availableProcessors());
+		processors = Math.min(4, Runtime.getRuntime().availableProcessors());
 	}
 
 	/**
@@ -84,7 +84,7 @@ public class Osmonaut {
 	 *            Whether way-nodes should have tags. Disabling lowers memory
 	 *            usage.
 	 * 
-	 * @deprecated Use setWayNodeTags() instead. 
+	 * @deprecated Use setWayNodeTags() instead.
 	 */
 	@Deprecated
 	public Osmonaut(String filename, EntityFilter filter, boolean wayNodeTags) {
@@ -123,13 +123,9 @@ public class Osmonaut {
 		}
 
 		// Create caches
-		if(storeOnDisk) {
+		if (storeOnDisk) {
 			// Create MapDB database
-			DB db = DBMaker.tempFileDB()
-					.closeOnJvmShutdown()
-					.fileMmapEnableIfSupported()
-					.fileChannelEnable()
-					.make();
+			DB db = DBMaker.tempFileDB().closeOnJvmShutdown().fileMmapEnableIfSupported().fileChannelEnable().make();
 
 			nodeCache = new EntityCache<Node>(db, "node");
 			wayCache = new EntityCache<Way>(db, "way");
@@ -357,24 +353,28 @@ public class Osmonaut {
 
 	/* Settings */
 	/**
-	 * @param wayNodeTags Whether way-nodes should have tags. Disabling lowers memory usage. 
-	 * Defaults to 'true'.
+	 * @param wayNodeTags
+	 *            Whether way-nodes should have tags. Disabling lowers memory
+	 *            usage. Defaults to 'true'.
 	 */
 	public void setWayNodeTags(boolean wayNodeTags) {
 		this.wayNodeTags = wayNodeTags;
 	}
 
 	/**
-	 * @param processors Number of processors to use to decode the pbf. By default all available
-	 * processors are used.
+	 * @param processors
+	 *            Number of processors to use to decode the pbf. By default all
+	 *            available processors are used.
 	 */
 	public void setProcessors(int processors) {
 		this.processors = processors;
 	}
 
 	/**
-	 * @param storeOnDisk Whether entity caches should be stored on disk. Enabling this leads to 
-	 * lower memory usage but takes more time. Defaults to 'false'.
+	 * @param storeOnDisk
+	 *            Whether entity caches should be stored on disk. Enabling this
+	 *            leads to lower memory usage but takes more time. Defaults to
+	 *            'false'.
 	 */
 	public void setStoreOnDisk(boolean storeOnDisk) {
 		this.storeOnDisk = storeOnDisk;
