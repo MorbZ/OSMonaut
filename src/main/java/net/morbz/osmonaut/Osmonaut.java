@@ -141,7 +141,7 @@ public class Osmonaut {
 		}
 
 		// Scan ways
-		if (filter.getEntityAllowed(EntityType.WAY) || wayCache.size() != 0) {
+		if (filter.getEntityAllowed(EntityType.WAY) || !wayCache.isEmpty()) {
 			System.out.println("Scanning ways...");
 			scanWays();
 		}

@@ -25,9 +25,7 @@ package net.morbz.osmonaut;
 */
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import org.mapdb.DB;
 import org.mapdb.Serializer;
@@ -41,11 +39,10 @@ import net.morbz.osmonaut.osm.Entity;
  * @author MorbZ
  */
 public class EntityCache<T extends Entity> {
-	private Set<Long> neededIds;
+	private IdTracker idTracker = new IdTracker();
 	private Map<Long, T> entities;
 
 	public EntityCache() {
-		neededIds = new HashSet<Long>();
 		entities = new HashMap<Long, T>();
 	}
 
@@ -56,8 +53,7 @@ public class EntityCache<T extends Entity> {
 	 */
 	@SuppressWarnings("unchecked")
 	public EntityCache(DB db, String name) {
-		neededIds = db.treeSet(name + "_ids", Serializer.LONG).create();
-		entities = (Map<Long, T>)db.treeMap(name + "_entities")
+		entities = (Map<Long, T>)db.treeMap(name)
 				.keySerializer(Serializer.LONG)
 				.create();
 	}
@@ -69,7 +65,7 @@ public class EntityCache<T extends Entity> {
 	 *            The needed ID
 	 */
 	public void addNeeded(long id) {
-		neededIds.add(id);
+		idTracker.set(id);
 	}
 
 	/**
@@ -78,7 +74,7 @@ public class EntityCache<T extends Entity> {
 	 * @return true if the entity with this ID is needed
 	 */
 	public boolean isNeeded(Long id) {
-		return neededIds.contains(id);
+		return idTracker.get(id);
 	}
 
 	/**
@@ -89,7 +85,7 @@ public class EntityCache<T extends Entity> {
 	 */
 	public void addEntity(T entity) {
 		// Remove from needed
-		neededIds.remove(entity.getId());
+		idTracker.unset(entity.getId());
 
 		// Add to entities
 		entities.put(entity.getId(), entity);
@@ -105,9 +101,14 @@ public class EntityCache<T extends Entity> {
 	}
 
 	/**
-	 * @return The combined number of needed and full entities
+	 * @return true if there is at least one needed or full entity
 	 */
-	public int size() {
-		return neededIds.size() + entities.size();
+	public boolean isEmpty() {
+		if(entities.size() > 0) {
+			return false;
+		} else if(!idTracker.isEmpty()) {
+			return false;
+		}
+		return true;
 	}
 }
