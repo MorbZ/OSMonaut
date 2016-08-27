@@ -30,10 +30,9 @@ import java.util.List;
 
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
-import org.openstreetmap.osmosis.pbf2.v0_6.PbfReader;
 
 import net.morbz.osmonaut.binary.OsmonautSink;
-import net.morbz.osmonaut.binary.SinkAdapter;
+import net.morbz.osmonaut.binary.pbf.PbfDecoder;
 import net.morbz.osmonaut.osm.Entity;
 import net.morbz.osmonaut.osm.EntityType;
 import net.morbz.osmonaut.osm.Node;
@@ -57,11 +56,6 @@ public class Osmonaut {
 	private boolean wayNodeTags = true;
 	private int processors;
 	private boolean storeOnDisk = false;
-
-	// Dummy method for exporting as runnable JAR
-	public static void main(String[] args) {
-
-	}
 
 	/**
 	 * @param filename
@@ -274,7 +268,7 @@ public class Osmonaut {
 				}
 
 				// Assemble members
-				boolean incomplete = false;
+				boolean incomplete = relation.isIncomplete();
 				List<RelationMember> members = new ArrayList<RelationMember>();
 				for (RelationMember member : relation.getMembers()) {
 					// Get real entity
@@ -346,9 +340,8 @@ public class Osmonaut {
 	 *            The sink to use
 	 */
 	private void scanFile(final OsmonautSink sink) {
-		PbfReader reader = new PbfReader(file, processors);
-		reader.setSink(SinkAdapter.adapt(sink));
-		reader.run();
+		PbfDecoder decoder = new PbfDecoder(file, processors, sink);
+		decoder.scan();
 	}
 
 	/* Settings */

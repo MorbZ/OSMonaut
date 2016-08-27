@@ -104,6 +104,7 @@ public class Polygon extends IPolygon {
 	public LatLon getCenter() {
 		// Calculate centroid
 		// This part is buggy
+		// TODO: Fix centroid calculation
 		/*
 		 * double centerX = 0, centerY = 0; double signedArea = 0.0; double x0 =
 		 * 0.0; // Current vertex X double y0 = 0.0; // Current vertex Y double

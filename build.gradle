@@ -30,6 +30,6 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
     testCompile group: 'org.assertj', name: 'assertj-core', version: '3.5.2'
-    compile group: 'org.openstreetmap.osmosis', name: 'osmosis-pbf2', version: '0.45'
+    compile group: 'com.google.protobuf', name: 'protobuf-java', version: '3.0.0'
     compile group: 'org.mapdb', name: 'mapdb', version: '3.0.1'
 }
