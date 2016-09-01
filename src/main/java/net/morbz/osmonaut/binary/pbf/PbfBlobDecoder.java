@@ -23,6 +23,7 @@ import net.morbz.osmonaut.binary.pbf.proto.Osmformat.PrimitiveBlock.PrimitiveGro
 import net.morbz.osmonaut.binary.pbf.proto.Osmformat.PrimitiveBlock.PrimitiveGroup.Relation.MemberType;
 import net.morbz.osmonaut.binary.pbf.proto.Osmformat.PrimitiveBlock.PrimitiveGroup.Way;
 import net.morbz.osmonaut.osm.Entity;
+import net.morbz.osmonaut.osm.EntityType;
 import net.morbz.osmonaut.osm.LatLon;
 import net.morbz.osmonaut.osm.RelationMember;
 import net.morbz.osmonaut.osm.Tags;
@@ -40,8 +41,9 @@ public class PbfBlobDecoder implements Runnable {
 	private byte[] rawBlob;
 	private PbfBlobDecoderListener listener;
 	private List<Entity> decodedEntities;
-	private EntityFilter filter;
+	private EntityType entityType;
 	private PbfFieldDecoder fieldDecoder;
+	private EntityFilter containedTypes = new EntityFilter(false, false, false);
 
 	/**
 	 * Creates a new instance.
@@ -52,15 +54,14 @@ public class PbfBlobDecoder implements Runnable {
 	 *            The raw data of the blob.
 	 * @param listener
 	 *            The listener for receiving decoding results.
-	 * @param filter
-	 *            The entity filter that tells which entities should be 
-	 *            scanned.
+	 * @param type
+	 *            The entity of which entities will be returned.
 	 */
-	public PbfBlobDecoder(String blobType, byte[] rawBlob, PbfBlobDecoderListener listener, EntityFilter filter) {
+	public PbfBlobDecoder(String blobType, byte[] rawBlob, PbfBlobDecoderListener listener, EntityType type) {
 		this.blobType = blobType;
 		this.rawBlob = rawBlob;
 		this.listener = listener;
-		this.filter = filter;
+		this.entityType = type;
 	}
 
 	private byte[] readBlobContent() throws IOException {
@@ -278,21 +279,34 @@ public class PbfBlobDecoder implements Runnable {
 		PrimitiveBlock block = PrimitiveBlock.parseFrom(data);
 		fieldDecoder = new PbfFieldDecoder(block);
 
-		for (PrimitiveGroup primitiveGroup : block.getPrimitivegroupList()) {
+		for (PrimitiveGroup group : block.getPrimitivegroupList()) {
 			// Nodes
-			if(filter.getEntityAllowed(net.morbz.osmonaut.osm.EntityType.NODE)) {
-				processNodes(primitiveGroup.getDense());
-				processNodes(primitiveGroup.getNodesList());
+			if(group.hasDense() || group.getNodesCount() > 0) {
+				containedTypes.setEntityEnabled(EntityType.NODE, true);
+
+				if(entityType == EntityType.NODE) {
+					processNodes(group.getDense());
+					processNodes(group.getNodesList());
+				}
 			}
 
 			// Ways
-			if(filter.getEntityAllowed(net.morbz.osmonaut.osm.EntityType.WAY)) {
-				processWays(primitiveGroup.getWaysList());
+			if(group.getWaysCount() > 0) {
+				containedTypes.setEntityEnabled(EntityType.WAY, true);
+
+				if(entityType == EntityType.WAY) {
+					processWays(group.getWaysList());
+				}
 			}
 
+
 			// Relations
-			if(filter.getEntityAllowed(net.morbz.osmonaut.osm.EntityType.RELATION)) {
-				processRelations(primitiveGroup.getRelationsList());
+			if(group.getRelationsCount() > 0) {
+				containedTypes.setEntityEnabled(EntityType.RELATION, true);
+
+				if(entityType == EntityType.RELATION) {
+					processRelations(group.getRelationsList());
+				}
 			}
 		}
 	}
@@ -316,7 +330,7 @@ public class PbfBlobDecoder implements Runnable {
 		try {
 			runAndTrapExceptions();
 
-			listener.complete(decodedEntities);
+			listener.complete(decodedEntities, containedTypes);
 		} catch (RuntimeException e) {
 			listener.error();
 		}

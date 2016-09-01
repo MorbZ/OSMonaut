@@ -7,10 +7,12 @@ package net.morbz.osmonaut.binary.pbf;
  * has not yet been decoded into a PBF blob object.
  * 
  * @author Brett Henderson
+ * @author Merten Peetz
  */
 public class PbfRawBlob {
 	private String type;
 	private byte[] data;
+	private long fileOffset;
 
 	/**
 	 * Creates a new instance.
@@ -20,10 +22,14 @@ public class PbfRawBlob {
 	 *            the type field in the blob header.
 	 * @param data
 	 *            The raw contents of the blob in binary undecoded form.
+	 * @param fileOffset        
+	 *            The position from the beginning of the PBF file in bytes 
+	 *            where the blob starts
 	 */
-	public PbfRawBlob(String type, byte[] data) {
+	public PbfRawBlob(String type, byte[] data, long fileOffset) {
 		this.type = type;
 		this.data = data;
+		this.fileOffset = fileOffset;
 	}
 
 	/**
@@ -43,5 +49,13 @@ public class PbfRawBlob {
 	 */
 	public byte[] getData() {
 		return data;
+	}
+
+	/**
+	 * @return The position from the beginning of the PBF file in bytes where 
+	 * this blob starts  
+	 */
+	public long getFileOffset() {
+		return fileOffset;
 	}
 }

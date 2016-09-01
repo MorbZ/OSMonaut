@@ -2,10 +2,9 @@
 
 package net.morbz.osmonaut.binary.pbf;
 
-import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.IOException;
-import java.util.Iterator;
+import java.io.RandomAccessFile;
 
 import net.morbz.osmonaut.binary.pbf.proto.Fileformat;
 import net.morbz.osmonaut.binary.pbf.proto.Fileformat.BlobHeader;
@@ -15,36 +14,29 @@ import net.morbz.osmonaut.binary.pbf.proto.Fileformat.BlobHeader;
  * until the end of the stream is reached.
  * 
  * @author Brett Henderson
+ * @author Merten Peetz
  */
-public class PbfStreamSplitter implements Iterator<PbfRawBlob> {
-	private DataInputStream dis;
+public class RawBlobReader extends RawBlobProvider {
 	private boolean eof;
 	private PbfRawBlob nextBlob;
 
 	/**
 	 * Creates a new instance.
 	 * 
-	 * @param pbfStream
-	 *            The PBF data stream to be parsed.
+	 * @param file
+	 *            The PBF file to be parsed.
 	 */
-	public PbfStreamSplitter(DataInputStream pbfStream) {
-		dis = pbfStream;
+	public RawBlobReader(RandomAccessFile file) {
+		super(file);
 		eof = false;
 	}
 
 	private BlobHeader readHeader(int headerLength) throws IOException {
 		byte[] headerBuffer = new byte[headerLength];
-		dis.readFully(headerBuffer);
+		file.readFully(headerBuffer);
 
 		BlobHeader blobHeader = Fileformat.BlobHeader.parseFrom(headerBuffer);
 		return blobHeader;
-	}
-
-	private byte[] readRawBlob(BlobHeader blobHeader) throws IOException {
-		byte[] rawBlob = new byte[blobHeader.getDatasize()];
-
-		dis.readFully(rawBlob);
-		return rawBlob;
 	}
 
 	private void getNextBlob() {
@@ -54,15 +46,16 @@ public class PbfStreamSplitter implements Iterator<PbfRawBlob> {
 			// cases it indicates a corrupt or truncated file.
 			int headerLength;
 			try {
-				headerLength = dis.readInt();
+				headerLength = file.readInt();
 			} catch (EOFException e) {
 				eof = true;
 				return;
 			}
 
 			BlobHeader blobHeader = readHeader(headerLength);
-			byte[] blobData = readRawBlob(blobHeader);
-			nextBlob = new PbfRawBlob(blobHeader.getType(), blobData);
+			long fileOffset = file.getFilePointer();
+			byte[] blobData = readRawBlob(blobHeader.getDatasize());
+			nextBlob = new PbfRawBlob(blobHeader.getType(), blobData, fileOffset);
 		} catch (IOException e) {
 			throw new RuntimeException("Unable to get next blob from PBF stream.", e);
 		}
@@ -89,14 +82,12 @@ public class PbfStreamSplitter implements Iterator<PbfRawBlob> {
 	public void remove() {
 		throw new UnsupportedOperationException();
 	}
-
-	public void close() {
-		if (dis != null) {
-			try {
-				dis.close();
-			} catch (IOException e) {
-			}
-		}
-		dis = null;
+	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void resetIterator() {
+		// No need to reset as the file is indexed after the first read.
 	}
 }

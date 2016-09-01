@@ -27,34 +27,34 @@ package net.morbz.osmonaut;
 import net.morbz.osmonaut.osm.EntityType;
 
 /**
- * This class is used to select which OSM entities are required. By default all
- * entities are allowed.
+ * This class is used to select OSM entity types. By default all types are 
+ * enabled.
  * 
  * @author MorbZ
  */
 public class EntityFilter {
-	private boolean nodesAllowed;
-	private boolean waysAllowed;
-	private boolean relationsAllowed;
+	private boolean nodesEnabled;
+	private boolean waysEnabled;
+	private boolean relationsEnabled;
 
 	public EntityFilter() {
-		nodesAllowed = true;
-		waysAllowed = true;
-		relationsAllowed = true;
+		nodesEnabled = true;
+		waysEnabled = true;
+		relationsEnabled = true;
 	}
 
 	/**
-	 * @param nodesAllowed
-	 *            True if nodes are allowed
-	 * @param waysAllowed
-	 *            True if ways are allowed
-	 * @param relationsAllowed
-	 *            True if relations are allowed
+	 * @param nodesEnabled
+	 *            Whether nodes are enabled
+	 * @param waysEnabled
+	 *            Whether ways are enabled
+	 * @param relationsEnabled
+	 *            Whether relations are enabled
 	 */
-	public EntityFilter(boolean nodesAllowed, boolean waysAllowed, boolean relationsAllowed) {
-		this.nodesAllowed = nodesAllowed;
-		this.waysAllowed = waysAllowed;
-		this.relationsAllowed = relationsAllowed;
+	public EntityFilter(boolean nodesEnabled, boolean waysEnabled, boolean relationsEnabled) {
+		this.nodesEnabled = nodesEnabled;
+		this.waysEnabled = waysEnabled;
+		this.relationsEnabled = relationsEnabled;
 	}
 
 	/**
@@ -62,17 +62,30 @@ public class EntityFilter {
 	 *            The entity type
 	 * @param allowed
 	 *            True if the entity type is allowed
+	 *            
+	 * @deprecated Use setEntityEnabled() instead.
 	 */
+	@Deprecated
 	public void setEntityAllowed(EntityType type, boolean allowed) {
+		setEntityEnabled(type, allowed);
+	}
+
+	/**
+	 * @param type
+	 *            The entity type
+	 * @param enabled
+	 *            Whether the entity type is enabled
+	 */
+	public void setEntityEnabled(EntityType type, boolean enabled) {
 		switch (type) {
 		case NODE:
-			nodesAllowed = allowed;
+			nodesEnabled = enabled;
 			break;
 		case WAY:
-			waysAllowed = allowed;
+			waysEnabled = enabled;
 			break;
 		case RELATION:
-			relationsAllowed = allowed;
+			relationsEnabled = enabled;
 			break;
 		}
 	}
@@ -81,16 +94,40 @@ public class EntityFilter {
 	 * @param type
 	 *            The entity type
 	 * @return true if the entity type is allowed
+	 * 
+	 * @deprecated Use getEntityEnabled() instead.
 	 */
+	@Deprecated
 	public boolean getEntityAllowed(EntityType type) {
+		return getEntityEnabled(type);
+	}
+
+	/**
+	 * @param type
+	 *            The entity type
+	 * @return true if the entity type is enabled
+	 */
+	public boolean getEntityEnabled(EntityType type) {
 		switch (type) {
 		case NODE:
-			return nodesAllowed;
+			return nodesEnabled;
 		case WAY:
-			return waysAllowed;
+			return waysEnabled;
 		case RELATION:
-			return relationsAllowed;
+			return relationsEnabled;
 		}
 		return false;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public String toString() {
+		String str = 
+				"N: " + (nodesEnabled ? "1" : "0") + 
+				", W: " + (waysEnabled ? "1" : "0") +
+				", R: " + (relationsEnabled ? "1" : "0");
+		return str;
 	}
 }

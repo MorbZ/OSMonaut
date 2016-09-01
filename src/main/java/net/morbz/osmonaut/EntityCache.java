@@ -101,14 +101,9 @@ public class EntityCache<T extends Entity> {
 	}
 
 	/**
-	 * @return true if there is at least one needed or full entity
+	 * @return true if there is at least one needed entity
 	 */
-	public boolean isEmpty() {
-		if(entities.size() > 0) {
-			return false;
-		} else if(!idTracker.isEmpty()) {
-			return false;
-		}
-		return true;
+	public boolean needsEntities() {
+		return !idTracker.isEmpty();
 	}
 }

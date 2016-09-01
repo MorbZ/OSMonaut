@@ -3,7 +3,7 @@
 
 package net.morbz.osmonaut.binary.pbf.proto;
 
-public final class Fileformat {
+@SuppressWarnings("all") public final class Fileformat {
   private Fileformat() {}
   public static void registerAllExtensions(
       com.google.protobuf.ExtensionRegistryLite registry) {

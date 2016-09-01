@@ -1,9 +1,9 @@
-package net.morbz.osmonaut.binary;
+package net.morbz.osmonaut.binary.pbf;
 
 /*
 * The MIT License (MIT)
 * 
-* Copyright (c) 2015 Merten Peetz
+* Copyright (c) 2016 Merten Peetz
 * 
 * Permission is hereby granted, free of charge, to any person obtaining a copy
 * of this software and associated documentation files (the "Software"), to deal
@@ -24,21 +24,31 @@ package net.morbz.osmonaut.binary;
 * SOFTWARE.
 */
 
-import net.morbz.osmonaut.osm.Entity;
+import java.io.IOException;
+import java.io.RandomAccessFile;
+import java.util.Iterator;
 
-/**
- * The sink that connects the PBF binary parser with Osmonaut.
- * 
- * @author MorbZ
+/** 
+ * Provides an iterator that reads the raw blobs of the PBF file.
  */
-public interface OsmonautSink {
+public abstract class RawBlobProvider implements Iterator<PbfRawBlob> {
+	protected RandomAccessFile file;
+
 	/**
-	 * The parser found an entity. Ways come with placeholder nodes in it that 
-	 * just have an ID. Relations come with placeholder members that just have
-	 * a role and an ID.
-	 * 
-	 * @param entity
-	 *            The parsed entity
+	 * @param file The file from which the blobs are read
 	 */
-	public void foundEntity(Entity entity);
+	public RawBlobProvider(RandomAccessFile file) {
+		this.file = file;
+	}
+
+	/**
+	 * Resets the iterator so that it can be used again.
+	 */
+	public abstract void resetIterator();
+
+	protected byte[] readRawBlob(int size) throws IOException {
+		byte[] rawBlob = new byte[size];
+		file.readFully(rawBlob);
+		return rawBlob;
+	}
 }
