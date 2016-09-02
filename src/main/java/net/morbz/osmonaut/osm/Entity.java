@@ -48,7 +48,10 @@ public abstract class Entity implements Externalizable {
 	 */
 	public Entity(long id, Tags tags) {
 		this.id = id;
-		this.tags = tags;
+
+		if(tags != null && tags.size() > 0) {
+			this.tags = tags;
+		}
 	}
 
 	/**
@@ -69,6 +72,9 @@ public abstract class Entity implements Externalizable {
 	 * @return The tags of this entity
 	 */
 	public Tags getTags() {
+		if(tags == null) {
+			return new Tags();
+		}
 		return tags;
 	}
 

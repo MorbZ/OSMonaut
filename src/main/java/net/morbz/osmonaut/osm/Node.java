@@ -37,7 +37,8 @@ import net.morbz.osmonaut.util.StringUtil;
  * @author MorbZ
  */
 public class Node extends Entity {
-	private LatLon latlon;
+	private double lat = Double.NaN;
+	private double lon = Double.NaN;
 
 	/**
 	 * @param id
@@ -49,7 +50,11 @@ public class Node extends Entity {
 	 */
 	public Node(long id, Tags tags, LatLon latlon) {
 		super(id, tags);
-		this.latlon = latlon;
+
+		if(latlon != null) {
+			lat = latlon.getLat();
+			lon = latlon.getLon();
+		}
 	}
 
 	/**
@@ -63,7 +68,10 @@ public class Node extends Entity {
 	 * @return The coordinates of this node
 	 */
 	public LatLon getLatlon() {
-		return latlon;
+		if(Double.isNaN(lat)) {
+			return null;
+		}
+		return new LatLon(lat, lon);
 	}
 
 	/**
@@ -79,7 +87,7 @@ public class Node extends Entity {
 	 */
 	@Override
 	public LatLon getCenter() {
-		return latlon;
+		return getLatlon();
 	}
 
 	/**
@@ -88,7 +96,7 @@ public class Node extends Entity {
 	@Override
 	public Bounds getBounds() {
 		Bounds bounds = new Bounds();
-		bounds.extend(latlon);
+		bounds.extend(getLatlon());
 		return bounds;
 	}
 
@@ -100,7 +108,7 @@ public class Node extends Entity {
 		String str = "";
 		str += "{" + "\t" + "NODE" + "\n";
 		str += "\t" + "id: " + id + "\n";
-		str += "\t" + "latlon: " + latlon + "\n";
+		str += "\t" + "latlon: " + getLatlon() + "\n";
 		str += "\t" + "tags: " + StringUtil.indent(tags.toString());
 		str += "}";
 		return str;
@@ -113,7 +121,8 @@ public class Node extends Entity {
 	public void writeExternal(ObjectOutput out) throws IOException {
 		super.writeExternal(out);
 
-		out.writeObject(latlon);
+		out.writeDouble(lat);
+		out.writeDouble(lon);
 	}
 
 	/**
@@ -123,6 +132,7 @@ public class Node extends Entity {
 	public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
 		super.readExternal(in);
 
-		latlon = (LatLon)in.readObject();
+		lat = in.readDouble();
+		lon = in.readDouble();
 	}
 }
