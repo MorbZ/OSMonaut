@@ -125,11 +125,11 @@ public class Osmonaut {
 			// Create MapDB database
 			DB db = DBMaker.tempFileDB().closeOnJvmShutdown().fileMmapEnableIfSupported().fileChannelEnable().make();
 
-			nodeCache = new EntityCache<Node>(db, "node");
-			wayCache = new EntityCache<Way>(db, "way");
+			nodeCache = EntityCache.getDiskEntityCache(db, "node");
+			wayCache = EntityCache.getDiskEntityCache(db, "way");
 		} else {
-			nodeCache = new EntityCache<Node>();
-			wayCache = new EntityCache<Way>();
+			nodeCache = EntityCache.getMemoryEntityCache();
+			wayCache = EntityCache.getMemoryEntityCache();
 		}
 
 		// Scan relations

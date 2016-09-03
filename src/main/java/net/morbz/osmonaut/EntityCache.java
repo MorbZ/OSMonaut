@@ -24,11 +24,7 @@ package net.morbz.osmonaut;
 * SOFTWARE.
 */
 
-import java.util.HashMap;
-import java.util.Map;
-
 import org.mapdb.DB;
-import org.mapdb.Serializer;
 
 import net.morbz.osmonaut.osm.Entity;
 
@@ -40,22 +36,31 @@ import net.morbz.osmonaut.osm.Entity;
  */
 public class EntityCache<T extends Entity> {
 	private IdTracker idTracker = new IdTracker();
-	private Map<Long, T> entities;
+	private EntityMap<T> entityMap;
 
-	public EntityCache() {
-		entities = new HashMap<Long, T>();
+	/**
+	 * @param entityMap The map to store the full entities
+	 */
+	public EntityCache(EntityMap<T> entityMap) {
+		this.entityMap = entityMap;
 	}
 
 	/**
-	 * Constructor for using MapDB
+	 * Factory method to create a memory based entity cache.
+	 */
+	public static <T extends Entity> EntityCache<T> getMemoryEntityCache() {
+		EntityMap<T> entityMap = new MemoryEntityMap<T>();
+		return new EntityCache<T>(entityMap);
+	}
+
+	/**
+	 * Factory method to create a disk based entity cache.
 	 * @param db The MapDB database
 	 * @param name Unique identifier for this object
 	 */
-	@SuppressWarnings("unchecked")
-	public EntityCache(DB db, String name) {
-		entities = (Map<Long, T>)db.treeMap(name)
-				.keySerializer(Serializer.LONG)
-				.create();
+	public static <T extends Entity> EntityCache<T> getDiskEntityCache(DB db, String name) {
+		EntityMap<T> entityMap = new DiskEntityMap<T>(db, name);
+		return new EntityCache<T>(entityMap);
 	}
 
 	/**
@@ -88,7 +93,7 @@ public class EntityCache<T extends Entity> {
 		idTracker.unset(entity.getId());
 
 		// Add to entities
-		entities.put(entity.getId(), entity);
+		entityMap.add(entity);
 	}
 
 	/**
@@ -97,7 +102,7 @@ public class EntityCache<T extends Entity> {
 	 * @return The full entity with that ID or null if there is no full entity
 	 */
 	public T getEntity(long id) {
-		return entities.get(id);
+		return entityMap.get(id);
 	}
 
 	/**

@@ -236,6 +236,8 @@ public class PbfDecoder {
 			lock.lock();
 			try {
 				processBlobs(type);
+			} catch(Exception e) {
+				e.printStackTrace();
 			} finally {
 				lock.unlock();
 			}
