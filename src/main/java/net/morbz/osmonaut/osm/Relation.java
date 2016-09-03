@@ -123,7 +123,7 @@ public class Relation extends Entity {
 		String str = "";
 		str += "{" + "\t" + "RELATION" + "\n";
 		str += "\t" + "id: " + id + "\n";
-		str += "\t" + "tags: " + StringUtil.indent(tags.toString());
+		str += "\t" + "tags: " + StringUtil.indent(getTags().toString());
 		str += "\t" + "members: [" + "\n";
 		for (RelationMember member : members) {
 			str += StringUtil.indent(StringUtil.indent(member.toString()));

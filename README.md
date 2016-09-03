@@ -2,7 +2,7 @@
 
 To achieve this it is necessary to implement the two methods of the IOsmonautReceiver interface: `needsEntity()` and `foundEntity()`. `needsEntity()` helps reducing the amount of memory needed. For example if a relation is not needed there is no need to keep all the member ways and nodes in memory. `foundEntity()` is called when all the members of the entity have been prepared and includes the complete entity.
 
-OSMonaut offers basic geometric functions and can handle multipolygons. Multithreading is used for parsing the PBF file and a low memory mode is available that stores the caches on disk.
+OSMonaut offers basic geometric functions and can handle multipolygons. Multithreading is used for parsing the PBF file and a low memory mode is available that stores the caches on disk. Super-relations are not yet supported.
 
 ## Sample ##
 

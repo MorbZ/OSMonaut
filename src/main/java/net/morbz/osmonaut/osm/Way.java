@@ -119,7 +119,7 @@ public class Way extends Entity {
 		String str = "";
 		str += "{" + "\t" + "WAY" + "\n";
 		str += "\t" + "id: " + id + "\n";
-		str += "\t" + "tags: " + StringUtil.indent(tags.toString());
+		str += "\t" + "tags: " + StringUtil.indent(getTags().toString());
 		str += "\t" + "nodes: [" + "\n";
 		for (Node node : nodes) {
 			str += StringUtil.indent(StringUtil.indent(node.toString()));

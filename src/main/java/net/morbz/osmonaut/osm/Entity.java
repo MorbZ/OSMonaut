@@ -38,7 +38,7 @@ import net.morbz.osmonaut.geometry.Bounds;
  */
 public abstract class Entity implements Externalizable {
 	protected long id;
-	protected Tags tags;
+	private Tags tags;
 
 	/**
 	 * @param id

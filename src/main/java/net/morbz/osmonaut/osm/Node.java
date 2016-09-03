@@ -109,7 +109,7 @@ public class Node extends Entity {
 		str += "{" + "\t" + "NODE" + "\n";
 		str += "\t" + "id: " + id + "\n";
 		str += "\t" + "latlon: " + getLatlon() + "\n";
-		str += "\t" + "tags: " + StringUtil.indent(tags.toString());
+		str += "\t" + "tags: " + StringUtil.indent(getTags().toString());
 		str += "}";
 		return str;
 	}

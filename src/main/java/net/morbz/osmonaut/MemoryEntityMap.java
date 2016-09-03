@@ -76,8 +76,13 @@ public class MemoryEntityMap<T extends Entity> implements EntityMap<T> {
 			sorted = true;
 		}
 
-		// Get bucket
+		// Check array size
 		int bucketId = getBucketId(id);
+		if(!arraySpaceAllocated(bucketId)) {
+			return null;
+		}
+
+		// Get bucket
 		List<T> bucket = buckets.get(bucketId);
 		if(bucket == null) {
 			return null;
