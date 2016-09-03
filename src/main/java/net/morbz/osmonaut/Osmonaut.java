@@ -57,6 +57,7 @@ public class Osmonaut {
 	private boolean wayNodeTags = true;
 	private int processors;
 	private boolean storeOnDisk = false;
+	private int verbosity = 1;
 
 	/**
 	 * @param filename
@@ -96,11 +97,11 @@ public class Osmonaut {
 	public void scan(IOsmonautReceiver receiver) {
 		this.receiver = receiver;
 
-		System.out.println("OSMonaut started");
+		log("OSMonaut started", 1);
 
 		// Check if file exists
 		if (!file.exists()) {
-			System.out.println("E: Input file does not exist");
+			log("E: Input file does not exist", 0);
 			return;
 		}
 
@@ -113,7 +114,7 @@ public class Osmonaut {
 			}
 		}
 		if (!somethingNeeded) {
-			System.out.println("Nothing to scan");
+			log("Nothing to scan", 1);
 			return;
 		}
 
@@ -134,23 +135,23 @@ public class Osmonaut {
 
 		// Scan relations
 		if (filter.getEntityEnabled(EntityType.RELATION)) {
-			System.out.println("Scanning relations...");
+			log("Scanning relations...", 1);
 			scanRelations();
 		}
 
 		// Scan ways
 		if (filter.getEntityEnabled(EntityType.WAY) || wayCache.needsEntities()) {
-			System.out.println("Scanning ways...");
+			log("Scanning ways...", 1);
 			scanWays();
 		}
 
 		// Final scan
-		System.out.println("Final scan...");
+		log("Final scan...", 1);
 		finalScan();
-		
+
 		// Close PBF file
 		decoder.close();
-		
+
 		// Free variables
 		nodeCache = null;
 		wayCache = null;
@@ -217,7 +218,7 @@ public class Osmonaut {
 	 */
 	private void finalScan() {
 		if(filter.getEntityEnabled(EntityType.NODE) || nodeCache.needsEntities()) {
-			System.out.println("...Scanning nodes");
+			log("...Scanning nodes", 1);
 			decoder.scan(EntityType.NODE, new OsmonautSink() {
 				@Override
 				public void foundEntity(Entity entity) {
@@ -241,7 +242,7 @@ public class Osmonaut {
 		}
 
 		if(filter.getEntityEnabled(EntityType.WAY) || wayCache.needsEntities()) {
-			System.out.println("...Scanning ways");
+			log("...Scanning ways", 1);
 			decoder.scan(EntityType.WAY, new OsmonautSink() {
 				@Override
 				public void foundEntity(Entity entity) {
@@ -257,7 +258,7 @@ public class Osmonaut {
 					for (Node incompleteNode : way.getNodes()) {
 						Node node = nodeCache.getEntity(incompleteNode.getId());
 						if (node == null) {
-							System.out.println("E: Node for way not found");
+							log("E: Node for way not found", 0);
 						} else {
 							nodes.add(node);
 						}
@@ -280,7 +281,7 @@ public class Osmonaut {
 		}
 
 		if(filter.getEntityEnabled(EntityType.RELATION)) {
-			System.out.println("...Scanning relations");
+			log("...Scanning relations", 1);
 			decoder.scan(EntityType.RELATION, new OsmonautSink() {
 				@Override
 				public void foundEntity(Entity entity) {
@@ -345,6 +346,14 @@ public class Osmonaut {
 		return true;
 	}
 
+	// TODO: Add progress receiver interface, so that the caller can be 
+	// informed about the progress even with verbosity = 0
+	private void log(String msg, int verbosity) {
+		if(this.verbosity >= verbosity) {
+			System.out.println(msg);
+		}
+	}
+
 	/* Settings */
 	/**
 	 * @param wayNodeTags
@@ -372,5 +381,15 @@ public class Osmonaut {
 	 */
 	public void setStoreOnDisk(boolean storeOnDisk) {
 		this.storeOnDisk = storeOnDisk;
+	}
+
+	/**
+	 * @param verbosity
+	 *            Sets the verbosity level. The levels are:
+	 *            *0: Prints only errors
+	 *            *1: Prints also the most important progress steps
+	 */
+	public void setVerbosity(int verbosity) {
+		this.verbosity = verbosity;
 	}
 }

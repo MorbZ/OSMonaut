@@ -35,6 +35,9 @@ import net.morbz.osmonaut.osm.Entity;
  * Uses MapDB for storing entities.
  */
 public class DiskEntityMap<T extends Entity> implements EntityMap<T> {
+	// TODO: Find alternative to MapDB or implement own disk map, as it is 
+	// really slow with MapDB
+
 	private Map<Long, T> entities;
 
 	/**
