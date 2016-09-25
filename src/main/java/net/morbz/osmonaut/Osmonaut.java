@@ -348,6 +348,7 @@ public class Osmonaut {
 
 	// TODO: Add progress receiver interface, so that the caller can be 
 	// informed about the progress even with verbosity = 0
+	// TODO: Use Log4j instead of sysouts
 	private void log(String msg, int verbosity) {
 		if(this.verbosity >= verbosity) {
 			System.out.println(msg);
@@ -388,6 +389,7 @@ public class Osmonaut {
 	 *            Sets the verbosity level. The levels are:
 	 *            *0: Prints only errors
 	 *            *1: Prints also the most important progress steps
+	 *            Defaults to 1.
 	 */
 	public void setVerbosity(int verbosity) {
 		this.verbosity = verbosity;

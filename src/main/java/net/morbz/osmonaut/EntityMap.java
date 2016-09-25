@@ -30,6 +30,7 @@ import net.morbz.osmonaut.osm.Entity;
  * Maps entity IDs to entities.
  */
 public interface EntityMap<T extends Entity> {
+	// TODO: Add unit test for EntityMaps
 	/**
 	 * Adds the entity to the map.
 	 * @param entity The entity to store
