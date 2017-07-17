@@ -32,4 +32,4 @@ naut.scan(new IOsmonautReceiver() {
 });
 ```
 
-[→ Full documentation](http://docs.morbz.de/osmonaut/)
+[→ Full documentation](https://morbz.github.io/OSMonaut/)
