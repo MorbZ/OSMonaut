@@ -1,4 +1,6 @@
-**OSMonaut** is a Java framework that makes it easy to parse OpenStreetMap data from binary files (PBF). The main feature is that it always returns complete OSM objects. That means a relation comes with all the members and not just member IDs and ways come with all the nodes including the tags and location of those nodes.
+### This project is unmaintained in favour of [gOSMonaut](https://github.com/MorbZ/gosmonaut) (Go) which is faster, has a lower memory footprint and is better tested.
+
+**OSMonaut** is a Java library that makes it easy to parse OpenStreetMap data from binary files (PBF). The main feature is that it always returns complete OSM objects. That means a relation comes with all the members and not just member IDs and ways come with all the nodes including the tags and location of those nodes.
 
 To achieve this it is necessary to implement the two methods of the IOsmonautReceiver interface: `needsEntity()` and `foundEntity()`. `needsEntity()` helps reducing the amount of memory needed. For example if a relation is not needed there is no need to keep all the member ways and nodes in memory. `foundEntity()` is called when all the members of the entity have been prepared and includes the complete entity.
 
